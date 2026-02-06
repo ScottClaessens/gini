@@ -1,5 +1,13 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 data_file|stem|55a6666557c52dc2|2cd30a861432af94|2c530c1562a7fbd1|-679625259|data/SiteGiniLevel.csv|t20490.6654210819s|s574550b|574550|file|local|vector|||0.683||
 data|stem|3dc9d1d4dee709ea|e6d67e545ba4d223|013c68e40d06abcf|33550471||t20490.6966780236s|s152402b|152402|rds|local|vector|||0.091||
-plot_gini_population|function|612bba9619f06eb5
 plot|stem|99edb554601e69e7|6a61073a0c528116|65772884b95bc6a8|874984291||t20490.710722343s|s795058b|795058|rds|local|vector|||0.496||
+stan_data_list|stem|b0f7c7b274547854|38cfefd48778a42d|fb8c8ad037f37e94|-1979483778||t20490.7633749975s|s10312b|10312|rds|local|vector|||0.002||
+fit_data|stem|06a0d60abdcdbbe1|c0f8efa321eb24b3|b48a1d70701f16bd|2045157859||t20490.7633753417s|s10330b|10330|qs|local|vector|||0||
+fit_file_model|stem|a8264d0681abf3d7|54a560e19a79606d|2c530c1562a7fbd1|1720039687|stan/model.stan|t20490.7431916273s|s763b|763|file|local|vector|||0||
+fit_mcmc_model|stem|ed14f753bfc5c3f5|936ccf3494654172|14ff9fafc58a4d6a|-1258408334||t20490.764228455s|s15956561b|15956561|qs|local|vector|||6.589||
+fit_diagnostics_model|stem|5ff29feaed4fe696|99c0b3ae17211f24|c622139a500550be|1035351838||t20490.7642289559s|s73386b|73386|fst_tbl|local|vector|||0.001||
+fit_summary_model|stem|653a57b212613c31|76a50aa46cf0de81|6c0286c3f4f78d01|1412698824||t20490.7642531585s|s48399b|48399|fst_tbl|local|vector|||2.066|The ESS has been capped to avoid unstable estimates.|
+fit_draws_model|stem|5c1323275f9c550d|c2057211be62d528|c622139a500550be|825927751||t20490.7642545584s|s19165937b|19165937|fst_tbl|local|vector|||0.066||
+plot_gini_population|function|612bba9619f06eb5
+get_stan_data_list|function|2a1ac1927ce511ef
