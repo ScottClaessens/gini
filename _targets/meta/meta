@@ -1,0 +1,5 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+data_file|stem|55a6666557c52dc2|2cd30a861432af94|2c530c1562a7fbd1|-679625259|data/SiteGiniLevel.csv|t20490.6654210819s|s574550b|574550|file|local|vector|||0.683||
+data|stem|3dc9d1d4dee709ea|e6d67e545ba4d223|013c68e40d06abcf|33550471||t20490.6966780236s|s152402b|152402|rds|local|vector|||0.091||
+plot_gini_population|function|612bba9619f06eb5
+plot|stem|99edb554601e69e7|6a61073a0c528116|65772884b95bc6a8|874984291||t20490.710722343s|s795058b|795058|rds|local|vector|||0.496||
