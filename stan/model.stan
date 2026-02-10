@@ -26,7 +26,7 @@ model {
   phi ~ normal(0.5, 0.05);
   tau ~ exponential(10);
   alpha ~ normal(10, 2);
-  beta ~ normal(0, 0.1);
+  beta ~ normal(0, 1);
   sigma ~ exponential(2);
   year_raw ~ uniform(0, 1);
   // gini model
@@ -34,20 +34,4 @@ model {
   gini_obs ~ normal(gini_true, gini_se);
   // population size model
   pop_size ~ lognormal(alpha + beta * (year_true / 1000), sigma);
-}
-generated quantities {
-  vector[N] gini_true_rep;   // replicate latent gini values
-  vector[N] gini_obs_rep;    // posterior predictive gini observations
-  vector[N] pop_size_rep;    // posterior predictive population sizes
-  vector[N] log_pop_mean;    // mean on log scale (no noise)
-  for (n in 1:N) {
-    // latent gini (process uncertainty)
-    gini_true_rep[n] = normal_rng(phi, tau);
-    // observed gini (measurement uncertainty)
-    gini_obs_rep[n] = normal_rng(gini_true[n], gini_se[n]);
-    // log population mean (deterministic)
-    log_pop_mean[n] = alpha + beta * (year_true[n] / 1000);
-    // posterior predictive population size
-    pop_size_rep[n] = lognormal_rng(log_pop_mean[n], sigma);
-  }
 }
