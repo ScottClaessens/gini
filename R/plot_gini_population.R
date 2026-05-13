@@ -1,5 +1,11 @@
-# function to plot gini and population over time
+#' Plot Gini and population size over time
+#'
+#' @param data Tibble of data
+#'
+#' @returns A ggplot object
+#'
 plot_gini_population <- function(data) {
+  
   p <-
     data |>
     # remove some sites for plot
@@ -31,6 +37,7 @@ plot_gini_population <- function(data) {
       y = "Log polity population"
     ) +
     theme_classic()
+  
   # save
   ggsave(
     filename = "plots/gini_population.pdf",
@@ -38,6 +45,8 @@ plot_gini_population <- function(data) {
     height = 4,
     width = 6
   )
+  
   # return
   p
+  
 }

@@ -1,37 +1,37 @@
 data {
-  int<lower=0> N;                         // total number of sites
-  vector<lower=0, upper=1>[N] gini_obs;   // observed gini estimates
-  vector<lower=0>[N] gini_se;             // standard errors for gini estimates
-  vector<lower=0>[N] pop_size;            // population size estimates
-  vector[N] start_year;                   // start year
-  vector[N] end_year;                     // end year
+  
+  int<lower=0> N;                          // number of sites
+  vector<lower=0, upper=1>[N] gini_lower;  // lower bound for gini estimate
+  vector<lower=0, upper=1>[N] gini_upper;  // upper bound for gini estimate
+  vector<lower=0, upper=1>[N] time_lower;  // lower bound for site date
+  vector<lower=0, upper=1>[N] time_upper;  // upper bound for site date
+  
 }
+
 parameters {
-  real<lower=0, upper=1> phi;             // location for gini 
-  real<lower=1e-12> tau;                  // scale for gini
-  vector<lower=0, upper=1>[N] gini_true;  // unknown true gini values
-  real alpha;                             // intercept for population size
-  real beta;                              // slope for population size
-  real<lower=1e-12, upper=10> sigma;      // scale for population size
-  vector<lower=0, upper=1>[N] year_raw;   // unknown true year (scaled 0-1)
+  real alpha;                                          // mean for gini
+  real<lower=0> phi;                                   // dispersion for gini
+  vector<lower=gini_lower, upper=gini_upper>[N] gini;  // true gini values
+  vector<lower=time_lower, upper=time_upper>[N] time;  // true site dates
 }
-transformed parameters {
-  vector[N] year_true;
-  for (n in 1:N) {
-    year_true[n] = start_year[n] + year_raw[n] * (end_year[n] - start_year[n]);
-  }
-}
+
 model {
+  
+  // initialise
+  real mu;
+  real shape1;
+  real shape2;
+  
   // priors
-  phi ~ normal(0.5, 0.05);
-  tau ~ exponential(10);
-  alpha ~ normal(10, 2);
-  beta ~ normal(0, 1);
-  sigma ~ exponential(2);
-  year_raw ~ uniform(0, 1);
+  alpha ~ normal(0, 1);
+  phi ~ normal(10, 1);
+  
   // gini model
-  gini_true ~ normal(phi, tau);
-  gini_obs ~ normal(gini_true, gini_se);
-  // population size model
-  pop_size ~ lognormal(alpha + beta * (year_true / 1000), sigma);
+  mu = inv_logit(alpha);
+  
+  shape1 = mu * phi + 1e-06;
+  shape2 = (1.0 - mu) * phi + 1e-06;
+  
+  gini ~ beta(shape1, shape2);
+  
 }
