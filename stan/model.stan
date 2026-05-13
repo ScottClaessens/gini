@@ -1,11 +1,9 @@
 data {
-  
   int<lower=0> N;                          // number of sites
   vector<lower=0, upper=1>[N] gini_lower;  // lower bound for gini estimate
   vector<lower=0, upper=1>[N] gini_upper;  // upper bound for gini estimate
   vector<lower=0, upper=1>[N] time_lower;  // lower bound for site date
   vector<lower=0, upper=1>[N] time_upper;  // upper bound for site date
-  
 }
 
 parameters {
@@ -34,4 +32,30 @@ model {
   
   gini ~ beta(shape1, shape2);
   
+}
+
+generated quantities {
+
+  real mu;
+  real shape1;
+  real shape2;
+
+  vector[N] gini_rep;
+  vector[N] log_lik;
+
+  // recompute transformed quantities
+  mu = inv_logit(alpha);
+
+  shape1 = mu * phi + 1e-6;
+  shape2 = (1.0 - mu) * phi + 1e-6;
+
+  for (n in 1:N) {
+    
+    // posterior predictive simulation
+    gini_rep[n] = beta_rng(shape1, shape2);
+
+    // pointwise log-likelihood
+    log_lik[n] = beta_lpdf(gini[n] | shape1, shape2);
+    
+  }
 }

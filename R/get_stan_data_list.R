@@ -15,7 +15,7 @@ get_stan_data_list <- function(data) {
       # if start date == end date, add small offset
       EndDate = ifelse(BeginDate == EndDate, EndDate + 0.1, EndDate),
       # if gini lower bound < 0, set to just above zero
-      Lower_B = ifelse(Lower_B < 0, 0.001, Lower_B),
+      Lower_B = ifelse(Lower_B < 0, 0.01, Lower_B),
       # convert dates to 0-1 range
       BeginDate01 = 
         (BeginDate - min(BeginDate)) / (max(EndDate) - min(BeginDate)),

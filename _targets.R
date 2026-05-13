@@ -2,7 +2,7 @@ library(stantargets)
 library(targets)
 library(tarchetypes)
 
-tar_option_set(packages = c("cmdstanr", "tidyverse"))
+tar_option_set(packages = c("cmdstanr", "loo", "tidyverse"))
 tar_source()
 
 list(
@@ -23,6 +23,8 @@ list(
     data = stan_data_list,
     parallel_chains = 4,
     seed = 1
-  )
+  ),
+  # calculate loo-cv
+  tar_target(loo, fit_mcmc_model$loo())
   
 )
