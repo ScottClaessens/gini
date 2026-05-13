@@ -11,8 +11,14 @@ list(
   tar_target(data_file, "data/SiteGiniLevel.csv", format = "file"),
   tar_target(data, read_csv(data_file, show_col_types = FALSE)),
   
-  # plot gini and polity population over time
-  tar_target(plot, plot_gini_population(data)),
+  # plot gini and population over time
+  tar_target(plot_gini_global, plot_gini_time(data)),
+  tar_target(plot_gini_by_region, plot_gini_time(data, split_by_region = TRUE)),
+  tar_target(plot_population_global, plot_population_time(data)),
+  tar_target(
+    plot_population_by_region,
+    plot_population_time(data, split_by_region = TRUE)
+  ),
   
   # get stan data list
   tar_target(stan_data_list, get_stan_data_list(data)),

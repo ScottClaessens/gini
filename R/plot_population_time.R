@@ -1,10 +1,11 @@
-#' Plot Gini and population size over time
+#' Plot log population size over time
 #'
 #' @param data Tibble of data
+#' @param split_by_region Logical. Should the plot split by region?
 #'
 #' @returns A ggplot object
 #'
-plot_gini_population <- function(data) {
+plot_population_time <- function(data, split_by_region = FALSE) {
   
   p <-
     data |>
@@ -38,12 +39,23 @@ plot_gini_population <- function(data) {
     ) +
     theme_classic()
   
+  # split by region?
+  if (split_by_region) {
+    p <-
+      p +
+      facet_wrap(. ~ Bigregion)
+  }
+  
   # save
   ggsave(
-    filename = "plots/gini_population.pdf",
+    filename = paste0(
+      "plots/population_",
+      ifelse(split_by_region, "by_region", "global"),
+      ".pdf"
+    ),
     plot = p,
-    height = 4,
-    width = 6
+    height = ifelse(split_by_region, 6, 4),
+    width = ifelse(split_by_region, 8, 6)
   )
   
   # return
