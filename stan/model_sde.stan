@@ -199,6 +199,7 @@ model {
 generated quantities {
 
   vector[N_sites] gini_rep;
+  vector[N_sites] log_pop_std_rep;
   vector[N_sites] log_lik;
 
   // ─────────────────────────────────────────
@@ -220,9 +221,11 @@ generated quantities {
     shape2 = (1.0 - mu) * phi + 1e-06;
     
     gini_rep[n] = beta_rng(shape1, shape2);
+    
+    log_pop_std_rep[n] = normal_rng(eta[ts_idx[n], 2], sigma);
 
     // ─────────────────────────────────────────
-    // Pointwise log-likelihood
+    // Pointwise log-likelihood for Gini
     // ─────────────────────────────────────────
     
     log_lik[n] = beta_lpdf(gini[n] | shape1, shape2);

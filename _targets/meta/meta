@@ -12,21 +12,21 @@ loo_ou|stem|8fc212ea04708b29|d057b974018de236|d2fe5ed2c62aed48|-382594959||t2058
 fit_ou_diagnostics_model_ou|stem|9f98cb6459609b34|ad6b03aee4c2cff5|d2fe5ed2c62aed48|-1772054233||t20587.5901570508s|s75249b|75249|fst_tbl|local|vector|||0.001||
 fit_ou_summary_model_ou|stem|cb8da00ae14a5d4e|1f96fb24ce71182a|a6ef09b051b4010d|2022301221||t20587.5904266137s|s510827b|510827|fst_tbl|local|vector|||23.195||
 fit_ou_draws_model_ou|stem|ee4da9e1bb884418|d1038248a2450b0c|d2fe5ed2c62aed48|-1880371470||t20587.5904330749s|s230366865b|230366865|fst_tbl|local|vector|||0.174||
-fit_baseline_file_model_baseline|stem|b078418576820f13|c265a5e52accd035|2c530c1562a7fbd1|1012567683|stan/model_baseline.stan|t20587.6909764624s|s2453b|2453|file|local|vector|||0||
-fit_sde_file_model_sde|stem|e9fe8ce4880fe29c|6176708a9998ae6f|2c530c1562a7fbd1|21400720|stan/model_sde.stan|t20588.3302119236s|s8525b|8525|file|local|vector|||0||
-plot_gini_time|function|d6f99ac238cb3301
-get_stan_data_list|function|e5daed88e855455c
-plot_population_time|function|ddf19670883cdb6b
 stan_data_list|stem|e030ef0ced8da131|38cfefd48778a42d|7c8d538d13ecba6a|-1979483778||t20588.34095499s|s22366b|22366|rds|local|vector|||0.012||
 fit_sde_data|stem|9bfc470e4e19a2ae|c0f8efa321eb24b3|66bd92a7851c6a17|-1066915202||t20588.3409551876s|s22529b|22529|qs|local|vector|||0||
 fit_baseline_data|stem|9bfc470e4e19a2ae|c0f8efa321eb24b3|66bd92a7851c6a17|-1905462714||t20588.3409555873s|s22529b|22529|qs|local|vector|||0||
-fit_sde_mcmc_model_sde|stem|9ad5dcc7fc56c609|d96c3a6005d05270|3b3c8108d874e4a8|1218024804||t20588.3737127063s|s144228539b|144228539|qs|local|vector|||2829.878||
-fit_baseline_mcmc_model_baseline|stem|ae1599405e4217be|4a9101c5b2e5cbea|d50e4f27ec386662|912154113||t20588.3738187779s|s94003131b|94003131|qs|local|vector|||8.871||
-fit_sde_draws_model_sde|stem|37af460256d6f1da|78c3021bf134a06f|aadc3b52b70f999b|-352720358||t20588.3738250328s|s172517233b|172517233|fst_tbl|local|vector|||0.185||
-fit_sde_diagnostics_model_sde|stem|1cc3eab5beb26ee6|babc02c6518d6a0a|aadc3b52b70f999b|780780803||t20588.373826523s|s74198b|74198|fst_tbl|local|vector|||0.001||
-loo_sde|stem|b711031749084f41|d83feea75807e8d3|aadc3b52b70f999b|1688845619||t20588.3738347519s|s50440b|50440|rds|local|vector|||0.623|Some Pareto k diagnostic values are too high. See help('pareto-k-diagnostic') for details.|
-fit_sde_summary_model_sde|stem|fa1a34342a113708|7e5d2c9663fd7e33|a3c57a4129962e87|1888423266||t20588.374040533s|s426301b|426301|fst_tbl|local|vector|||17.688||
-fit_baseline_summary_model_baseline|stem|418c58ff8730b01d|49848d701938ada5|736185c94d639c4c|-884859672||t20588.374174471s|s280767b|280767|fst_tbl|local|vector|||11.509||
-fit_baseline_diagnostics_model_baseline|stem|522f6f17914e2f0a|c6eb7e518e5b3cd2|0c0286a6de349170|-636395710||t20588.3741751819s|s75011b|75011|fst_tbl|local|vector|||0||
-fit_baseline_draws_model_baseline|stem|06f00953c9b503ca|387d2c6ab7aef26c|0c0286a6de349170|144038074||t20588.3741780014s|s113693204b|113693204|fst_tbl|local|vector|||0.064||
-loo_baseline|stem|276a02db414e61e1|663cba17631d6e76|0c0286a6de349170|1979593397||t20588.3741853894s|s50346b|50346|rds|local|vector|||0.549|Some Pareto k diagnostic values are too high. See help('pareto-k-diagnostic') for details.|
+plot_gini_time|function|d6f99ac238cb3301
+get_stan_data_list|function|e5daed88e855455c
+plot_population_time|function|ddf19670883cdb6b
+fit_baseline_file_model_baseline|stem|01a78169f34e9be0|c265a5e52accd035|2c530c1562a7fbd1|1012567683|stan/model_baseline.stan|t20588.3988252013s|s2462b|2462|file|local|vector|||0||
+fit_sde_file_model_sde|stem|7df116b7070ce549|6176708a9998ae6f|2c530c1562a7fbd1|21400720|stan/model_sde.stan|t20588.3987691036s|s8637b|8637|file|local|vector|||0||
+fit_sde_mcmc_model_sde|stem|7779f5aa4425b9bc|d96c3a6005d05270|3fa12f6bc6d9fd85|1218024804||t20588.4327094578s|s176899492b|176899492|qs|local|vector|||2855.293||
+fit_baseline_mcmc_model_baseline|stem|e13c798326dbcae4|4a9101c5b2e5cbea|25f0899cb85e27b8|912154113||t20588.4328948331s|s93964760b|93964760|qs|local|vector|||15.714||
+fit_sde_draws_model_sde|stem|421690308f926ec8|78c3021bf134a06f|3e35bb937a68296c|-352720358||t20588.4329025034s|s210358333b|210358333|fst_tbl|local|vector|||0.231||
+fit_sde_diagnostics_model_sde|stem|6071bd8027c96b01|babc02c6518d6a0a|3e35bb937a68296c|780780803||t20588.4329043046s|s74162b|74162|fst_tbl|local|vector|||0||
+loo_sde|stem|a7b7efdbb76ef019|d83feea75807e8d3|3e35bb937a68296c|1688845619||t20588.4329120658s|s50463b|50463|rds|local|vector|||0.573|Some Pareto k diagnostic values are too high. See help('pareto-k-diagnostic') for details.|
+fit_sde_summary_model_sde|stem|eaaf01d36c287f69|7e5d2c9663fd7e33|6e1aa922e4d54083|1888423266||t20588.4331712543s|s521168b|521168|fst_tbl|local|vector|||22.28||
+fit_baseline_summary_model_baseline|stem|418c58ff8730b01d|49848d701938ada5|43c7b5edfb7d07ce|-884859672||t20588.4333109582s|s280767b|280767|fst_tbl|local|vector|||12.002||
+fit_baseline_diagnostics_model_baseline|stem|522f6f17914e2f0a|c6eb7e518e5b3cd2|f85c1d4a4ae6cce1|-636395710||t20588.4333116404s|s75011b|75011|fst_tbl|local|vector|||0.001||
+fit_baseline_draws_model_baseline|stem|06f00953c9b503ca|387d2c6ab7aef26c|f85c1d4a4ae6cce1|144038074||t20588.4333144336s|s113693204b|113693204|fst_tbl|local|vector|||0.06||
+loo_baseline|stem|276a02db414e61e1|663cba17631d6e76|f85c1d4a4ae6cce1|1979593397||t20588.4333224945s|s50346b|50346|rds|local|vector|||0.606|Some Pareto k diagnostic values are too high. See help('pareto-k-diagnostic') for details.|

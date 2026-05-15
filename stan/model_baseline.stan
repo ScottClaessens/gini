@@ -70,7 +70,7 @@ generated quantities {
     gini_rep[n] = beta_rng(shape1, shape2);
 
     // ─────────────────────────────────────────
-    // Pointwise log-likelihood
+    // Pointwise log-likelihood for Gini
     // ─────────────────────────────────────────
     
     log_lik[n] = beta_lpdf(gini[n] | shape1, shape2);
