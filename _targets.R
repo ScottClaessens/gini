@@ -22,15 +22,25 @@ list(
   
   # get stan data list
   tar_target(stan_data_list, get_stan_data_list(data)),
-  # fit stan model
+  
+  # fit baseline model
   tar_stan_mcmc(
-    name = fit,
-    stan_files = "stan/model.stan",
+    name = fit_baseline,
+    stan_files = "stan/model_baseline.stan",
     data = stan_data_list,
     parallel_chains = 4,
     seed = 1
   ),
-  # calculate loo-cv
-  tar_target(loo, fit_mcmc_model$loo())
+  tar_target(loo_baseline, fit_baseline_mcmc_model_baseline$loo()),
+  
+  # fit sde model
+  tar_stan_mcmc(
+    name = fit_sde,
+    stan_files = "stan/model_sde.stan",
+    data = stan_data_list,
+    parallel_chains = 4,
+    seed = 1
+  ),
+  tar_target(loo_sde, fit_sde_mcmc_model_sde$loo())
   
 )

@@ -1,18 +1,32 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 data_file|stem|55a6666557c52dc2|2cd30a861432af94|2c530c1562a7fbd1|-679625259|data/SiteGiniLevel.csv|t20490.6654210819s|s574550b|574550|file|local|vector|||0.683||
 data|stem|3dc9d1d4dee709ea|e6d67e545ba4d223|013c68e40d06abcf|33550471||t20490.6966780236s|s152402b|152402|rds|local|vector|||0.091||
-fit_file_model|stem|0e0fd404cd10bec8|54a560e19a79606d|2c530c1562a7fbd1|1720039687|stan/model.stan|t20586.5445104075s|s1410b|1410|file|local|vector|||0||
-stan_data_list|stem|234e0da2c1065604|38cfefd48778a42d|83f3f9933e787d7a|-1979483778||t20586.5502039354s|s24627b|24627|rds|local|vector|||0.012||
-fit_data|stem|724cf565863b45a2|c0f8efa321eb24b3|04172286f3a03b0b|2045157859||t20586.5502041374s|s26077b|26077|qs|local|vector|||0||
-fit_mcmc_model|stem|ca87fb8fd1f271f5|e9d66d10eefd33fd|6726d3d68768cedc|-1258408334||t20586.550386244s|s122530890b|122530890|qs|local|vector|||15.423||
-fit_diagnostics_model|stem|65e6e9913c73cfe0|99c0b3ae17211f24|20fdf904a93ce63b|1035351838||t20586.550387572s|s73312b|73312|fst_tbl|local|vector|||0.001||
-loo|stem|fec3d3a1e71cdf05|be25661797986da4|20fdf904a93ce63b|858709431||t20586.5503953916s|s50322b|50322|rds|local|vector|||0.61|Some Pareto k diagnostic values are too high. See help('pareto-k-diagnostic') for details.|
-fit_summary_model|stem|350cfed016652043|76a50aa46cf0de81|42ecfc5092668c1e|1412698824||t20586.5505832522s|s372947b|372947|fst_tbl|local|vector|||16.141||
-fit_draws_model|stem|f4aa6a1a79139a47|c2057211be62d528|20fdf904a93ce63b|825927751||t20586.5505886102s|s151514491b|151514491|fst_tbl|local|vector|||0.186||
-plot_gini_time|function|d6f99ac238cb3301
-get_stan_data_list|function|af786a9cef74ad49
-plot_population_time|function|ddf19670883cdb6b
 plot_gini_by_region|stem|5d27ca55e9bb6241|a0d034dd22257e83|8caef764a7afd86c|-1471292496||t20586.5766660234s|s814845b|814845|rds|local|vector|||0.252||
 plot_population_by_region|stem|f1c71ff49b65ba96|470b9eec07c7dff1|616b02db125914e2|-1202508949||t20586.5766709261s|s818845b|818845|rds|local|vector|||0.249||
 plot_population_global|stem|de772bee70cdb987|1931482f792737a6|616b02db125914e2|633709987||t20586.5766739609s|s797870b|797870|rds|local|vector|||0.091||
 plot_gini_global|stem|26c4c86ab5554a35|5ec5d8332f564ef0|8caef764a7afd86c|411257877||t20586.5766763209s|s794557b|794557|rds|local|vector|||0.049||
+fit_ou_file_model_ou|stem|1e98f7ca87655a02|b66b55b0f4acff48|2c530c1562a7fbd1|742981709|stan/model_ou.stan|t20587.5890292983s|s6570b|6570|file|local|vector|||0||
+fit_ou_data|stem|2c0cf23716016cb6|c0f8efa321eb24b3|59364cf155d4c074|-2044213167||t20587.5891491227s|s23381b|23381|qs|local|vector|||0||
+fit_ou_mcmc_model_ou|stem|63fabbd9104c3c4c|a644e4c02992fc0c|d906cc9920381df8|-1946568587||t20587.5901475678s|s137739194b|137739194|qs|local|vector|||85.85||
+loo_ou|stem|8fc212ea04708b29|d057b974018de236|d2fe5ed2c62aed48|-382594959||t20587.5901557098s|s50439b|50439|rds|local|vector|||0.568|Some Pareto k diagnostic values are too high. See help('pareto-k-diagnostic') for details.|
+fit_ou_diagnostics_model_ou|stem|9f98cb6459609b34|ad6b03aee4c2cff5|d2fe5ed2c62aed48|-1772054233||t20587.5901570508s|s75249b|75249|fst_tbl|local|vector|||0.001||
+fit_ou_summary_model_ou|stem|cb8da00ae14a5d4e|1f96fb24ce71182a|a6ef09b051b4010d|2022301221||t20587.5904266137s|s510827b|510827|fst_tbl|local|vector|||23.195||
+fit_ou_draws_model_ou|stem|ee4da9e1bb884418|d1038248a2450b0c|d2fe5ed2c62aed48|-1880371470||t20587.5904330749s|s230366865b|230366865|fst_tbl|local|vector|||0.174||
+fit_baseline_file_model_baseline|stem|b078418576820f13|c265a5e52accd035|2c530c1562a7fbd1|1012567683|stan/model_baseline.stan|t20587.6909764624s|s2453b|2453|file|local|vector|||0||
+fit_sde_file_model_sde|stem|e9fe8ce4880fe29c|6176708a9998ae6f|2c530c1562a7fbd1|21400720|stan/model_sde.stan|t20588.3302119236s|s8525b|8525|file|local|vector|||0||
+plot_gini_time|function|d6f99ac238cb3301
+get_stan_data_list|function|e5daed88e855455c
+plot_population_time|function|ddf19670883cdb6b
+stan_data_list|stem|e030ef0ced8da131|38cfefd48778a42d|7c8d538d13ecba6a|-1979483778||t20588.34095499s|s22366b|22366|rds|local|vector|||0.012||
+fit_sde_data|stem|9bfc470e4e19a2ae|c0f8efa321eb24b3|66bd92a7851c6a17|-1066915202||t20588.3409551876s|s22529b|22529|qs|local|vector|||0||
+fit_baseline_data|stem|9bfc470e4e19a2ae|c0f8efa321eb24b3|66bd92a7851c6a17|-1905462714||t20588.3409555873s|s22529b|22529|qs|local|vector|||0||
+fit_sde_mcmc_model_sde|stem|9ad5dcc7fc56c609|d96c3a6005d05270|3b3c8108d874e4a8|1218024804||t20588.3737127063s|s144228539b|144228539|qs|local|vector|||2829.878||
+fit_baseline_mcmc_model_baseline|stem|ae1599405e4217be|4a9101c5b2e5cbea|d50e4f27ec386662|912154113||t20588.3738187779s|s94003131b|94003131|qs|local|vector|||8.871||
+fit_sde_draws_model_sde|stem|37af460256d6f1da|78c3021bf134a06f|aadc3b52b70f999b|-352720358||t20588.3738250328s|s172517233b|172517233|fst_tbl|local|vector|||0.185||
+fit_sde_diagnostics_model_sde|stem|1cc3eab5beb26ee6|babc02c6518d6a0a|aadc3b52b70f999b|780780803||t20588.373826523s|s74198b|74198|fst_tbl|local|vector|||0.001||
+loo_sde|stem|b711031749084f41|d83feea75807e8d3|aadc3b52b70f999b|1688845619||t20588.3738347519s|s50440b|50440|rds|local|vector|||0.623|Some Pareto k diagnostic values are too high. See help('pareto-k-diagnostic') for details.|
+fit_sde_summary_model_sde|stem|fa1a34342a113708|7e5d2c9663fd7e33|a3c57a4129962e87|1888423266||t20588.374040533s|s426301b|426301|fst_tbl|local|vector|||17.688||
+fit_baseline_summary_model_baseline|stem|418c58ff8730b01d|49848d701938ada5|736185c94d639c4c|-884859672||t20588.374174471s|s280767b|280767|fst_tbl|local|vector|||11.509||
+fit_baseline_diagnostics_model_baseline|stem|522f6f17914e2f0a|c6eb7e518e5b3cd2|0c0286a6de349170|-636395710||t20588.3741751819s|s75011b|75011|fst_tbl|local|vector|||0||
+fit_baseline_draws_model_baseline|stem|06f00953c9b503ca|387d2c6ab7aef26c|0c0286a6de349170|144038074||t20588.3741780014s|s113693204b|113693204|fst_tbl|local|vector|||0.064||
+loo_baseline|stem|276a02db414e61e1|663cba17631d6e76|0c0286a6de349170|1979593397||t20588.3741853894s|s50346b|50346|rds|local|vector|||0.549|Some Pareto k diagnostic values are too high. See help('pareto-k-diagnostic') for details.|
