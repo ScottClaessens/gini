@@ -1,65 +1,73 @@
 data {
   
-  int<lower=1> N_sites;                          // number of sites
-  vector<lower=0, upper=1>[N_sites] gini_lower;  // lower bound for gini
-  vector<lower=0, upper=1>[N_sites] gini_upper;  // upper bound for gini
+  int<lower=1> N_sites;                    // number of sites
+  vector<lower=0, upper=1>[N_sites] gini;  // gini estimates
+  vector[N_sites] pop_scaled;              // population size (scaled)
+  int<lower=0, upper=1> prior_only;        // sample the prior only?
   
 }
 
 parameters {
   
-  // beta parameters
-  real alpha;
-  real<lower=0> phi;
-  
-  // latent "true" gini values
-  vector<lower=gini_lower, upper=gini_upper>[N_sites] gini;
+  real alpha;          // gini intercept
+  real<lower=0> phi;   // gini precision parameter
+  real theta;          // population size intercept
+  real<lower=0> shape; // population size shape parameter
   
 }
 
 model {
-  
-  real mu;
-  real shape1;
-  real shape2;
   
   // ─────────────────────────────────────────
   // Priors
   // ─────────────────────────────────────────
   
   alpha ~ normal(0, 1);
-  phi ~ normal(10, 1);
+  phi ~ lognormal(3, 1);
+  theta ~ normal(0, 1);
+  shape ~ exponential(1);
   
   // ─────────────────────────────────────────
-  // Beta likelihood
+  // Likelihood
   // ─────────────────────────────────────────
   
-  mu = inv_logit(alpha);
-  
-  shape1 = mu * phi + 1e-06;
-  shape2 = (1.0 - mu) * phi + 1e-06;
-  
-  gini ~ beta(shape1, shape2);
+  if (!prior_only) {
+    
+    for (n in 1:N_sites) {
+    
+      // ─────────────────────────────────────────
+      // Gini
+      // ─────────────────────────────────────────
+      
+      real mu;
+      real shape1;
+      real shape2;
+    
+      mu = inv_logit(alpha);
+      shape1 = mu * phi;
+      shape2 = (1.0 - mu) * phi;
+      
+      gini[n] ~ beta(shape1, shape2);
+      
+      // ─────────────────────────────────────────
+      // Log population size
+      // ─────────────────────────────────────────
+      
+      if (pop_scaled[n] != -9999) {
+        pop_scaled[n] ~ gamma(shape, shape / exp(theta));
+      }
+    
+    }
+    
+  }
   
 }
 
 generated quantities {
 
-  real mu;
-  real shape1;
-  real shape2;
-
   vector[N_sites] gini_rep;
+  vector[N_sites] pop_scaled_rep;
   vector[N_sites] log_lik;
-
-  // ─────────────────────────────────────────
-  // Recompute transformed quantities
-  // ─────────────────────────────────────────
-  
-  mu = inv_logit(alpha);
-
-  shape1 = mu * phi + 1e-6;
-  shape2 = (1.0 - mu) * phi + 1e-6;
 
   for (n in 1:N_sites) {
     
@@ -67,7 +75,17 @@ generated quantities {
     // Posterior predictive simulation
     // ─────────────────────────────────────────
     
+    real mu;
+    real shape1;
+    real shape2;
+    
+    mu = inv_logit(alpha);
+    shape1 = mu * phi;
+    shape2 = (1.0 - mu) * phi;
+  
     gini_rep[n] = beta_rng(shape1, shape2);
+    
+    pop_scaled_rep[n] = gamma_rng(shape, shape / exp(theta));
 
     // ─────────────────────────────────────────
     // Pointwise log-likelihood for Gini

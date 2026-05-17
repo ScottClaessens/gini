@@ -1,10 +1,12 @@
 #' Get list of data for Stan model
 #'
 #' @param data Tibble of data
+#' @param prior_only Logical. If \code{TRUE}, the model ignores the likelihood
+#'   and samples from the prior only.
 #'
 #' @returns A named list
 #'
-get_stan_data_list <- function(data) {
+get_stan_data_list <- function(data, prior_only = FALSE) {
   
   # filter and sort data
   data <- 
@@ -12,12 +14,10 @@ get_stan_data_list <- function(data) {
     # drop one row with missing date
     drop_na(Date) |>
     mutate(
-      # if gini lower bound < 0, set to just above zero
-      Lower_B = ifelse(Lower_B < 0, 0.01, Lower_B),
       # normalise dates between 0 and 1
       Date = (Date - min(Date)) / (max(Date) - min(Date)),
-      # log and standardise population size
-      log_pop_std = as.numeric(scale(log(PolityPop)))
+      # scale population size
+      pop_scaled = PolityPop / mean(PolityPop, na.rm = TRUE)
     ) |>
     # sort by dates
     arrange(Date)
@@ -32,11 +32,11 @@ get_stan_data_list <- function(data) {
   list(
     N_sites     = nrow(data),
     N_times     = length(ts),
-    gini_lower  = data$Lower_B,
-    gini_upper  = data$Upper_B,
-    log_pop_std = ifelse(is.na(data$log_pop_std), -9999, data$log_pop_std),
+    gini        = data$Gini,
+    pop_scaled  = ifelse(is.na(data$pop_scaled), -9999, data$pop_scaled),
     ts          = ts,
-    ts_idx      = ts_idx
+    ts_idx      = ts_idx,
+    prior_only  = as.numeric(prior_only)
   )
   
 }

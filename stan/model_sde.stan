@@ -78,13 +78,13 @@ functions {
 
 data {
   
-  int<lower=1> N_sites;                          // number of sites
-  int<lower=1> N_times;                          // number of unique times
-  vector<lower=0, upper=1>[N_sites] gini_lower;  // lower bound for gini
-  vector<lower=0, upper=1>[N_sites] gini_upper;  // upper bound for gini
-  vector[N_sites] log_pop_std;                   // log population size (std.)
-  vector<lower=0>[N_times] ts;                   // time differences (centuries)
-  array[N_sites] int ts_idx;                     // id mapping sites to times
+  int<lower=1> N_sites;                    // number of sites
+  int<lower=1> N_times;                    // number of unique times
+  vector<lower=0, upper=1>[N_sites] gini;  // gini estimates
+  vector[N_sites] pop_scaled;              // population size (scaled)
+  vector<lower=0>[N_times] ts;             // time differences
+  array[N_sites] int ts_idx;               // id mapping sites to times
+  int<lower=0, upper=1> prior_only;        // sample the prior only?
   
 }
 
@@ -95,12 +95,9 @@ parameters {
   vector<lower=0>[2] Q_sigma;            // standard deviations of Q matrix
   vector[2] b;                           // SDE intercepts
   vector[2] eta_initial;                 // initial states
-  real<lower=0> phi;                     // gini measurement error
-  real<lower=0> sigma;                   // log population measurement error
+  real<lower=0> phi;                     // gini precision parameter
+  real<lower=0> shape;                   // population size shape parameter
   array[N_times - 1] vector[2] z_drift;  // stochastic drift
-  
-  // latent "true" gini values
-  vector<lower=gini_lower, upper=gini_upper>[N_sites] gini;
 
 }
 
@@ -130,7 +127,6 @@ transformed parameters {
     
     matrix[2, 2] A_delta;
     matrix[2, 2] VCV;
-    vector[2] drift_seg;
     matrix[2, 2] L_VCV;
     matrix[2, 2] A_solve;
     
@@ -153,43 +149,47 @@ model {
   // Priors
   // ─────────────────────────────────────────
   
+  A_diag ~ normal(0, 1);
+  A_offdiag ~ normal(0, 1);
+  Q_sigma ~ normal(0, 1);
   b ~ normal(0, 1);
   eta_initial ~ normal(0, 1);
+  phi ~ lognormal(3, 1);
+  shape ~ exponential(1);
   for (i in 1:(N_times - 1)) {
     z_drift[i] ~ normal(0, 1);
   }
-  A_offdiag ~ normal(0, 1);
-  A_diag ~ normal(0, 1);
-  Q_sigma ~ normal(0, 1);
-  phi ~ normal(10, 1);
-  sigma ~ normal(0, 1);
   
   // ─────────────────────────────────────────
   // Likelihood
   // ─────────────────────────────────────────
   
-  for (n in 1:N_sites) {
+  if (!prior_only) {
     
-    // ─────────────────────────────────────────
-    // Gini
-    // ─────────────────────────────────────────
+    for (n in 1:N_sites) {
     
-    real mu;
-    real shape1;
-    real shape2;
-  
-    mu = inv_logit(eta[ts_idx[n], 1]);
-    shape1 = mu * phi + 1e-06;
-    shape2 = (1.0 - mu) * phi + 1e-06;
+      // ─────────────────────────────────────────
+      // Gini
+      // ─────────────────────────────────────────
+      
+      real mu;
+      real shape1;
+      real shape2;
     
-    gini[n] ~ beta(shape1, shape2);
+      mu = inv_logit(eta[ts_idx[n], 1]);
+      shape1 = mu * phi;
+      shape2 = (1.0 - mu) * phi;
+      
+      gini[n] ~ beta(shape1, shape2);
+      
+      // ─────────────────────────────────────────
+      // Log population size
+      // ─────────────────────────────────────────
+      
+      if (pop_scaled[n] != -9999) {
+        pop_scaled[n] ~ gamma(shape, shape / exp(eta[ts_idx[n], 2]));
+      }
     
-    // ─────────────────────────────────────────
-    // Log population size
-    // ─────────────────────────────────────────
-    
-    if (log_pop_std[n] != -9999) {
-      log_pop_std[n] ~ normal(eta[ts_idx[n], 2], sigma);
     }
     
   }
@@ -199,12 +199,8 @@ model {
 generated quantities {
 
   vector[N_sites] gini_rep;
-  vector[N_sites] log_pop_std_rep;
+  vector[N_sites] pop_scaled_rep;
   vector[N_sites] log_lik;
-
-  // ─────────────────────────────────────────
-  // Recompute transformed quantities
-  // ─────────────────────────────────────────
 
   for (n in 1:N_sites) {
     
@@ -217,12 +213,12 @@ generated quantities {
     real shape2;
 
     mu = inv_logit(eta[ts_idx[n], 1]);
-    shape1 = mu * phi + 1e-06;
-    shape2 = (1.0 - mu) * phi + 1e-06;
+    shape1 = mu * phi;
+    shape2 = (1.0 - mu) * phi;
     
     gini_rep[n] = beta_rng(shape1, shape2);
     
-    log_pop_std_rep[n] = normal_rng(eta[ts_idx[n], 2], sigma);
+    pop_scaled_rep[n] = gamma_rng(shape, shape / exp(eta[ts_idx[n], 2]));
 
     // ─────────────────────────────────────────
     // Pointwise log-likelihood for Gini
