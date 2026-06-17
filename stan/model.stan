@@ -65,10 +65,21 @@ model {
 generated quantities {
   array[N] real gini_rep;
   array[N] real pop_size_rep;
+  array[100] real t_rep = linspaced_array(100, 0, 1);
+  array[100] vector[2] latent_rep;
+  
+  // posterior predictive checks
   for (i in 1:N) {
     real mu = inv_logit(latent[t_idx[i], 1]);
     real nu = latent[t_idx[i], 2];
     gini_rep[i] = beta_rng(mu * phi, (1 - mu) * phi);
     pop_size_rep[i] = lognormal_rng(nu, sigma);
   }
+  
+  // smooth ode prediction over 0-1 range
+  latent_rep[1][1] = init_gini;
+  latent_rep[1][2] = init_pop_size;
+  latent_rep[2:100] = ode_rk45(
+    ode, to_vector(latent_rep[1, ]), 0, t_rep[2:100], theta
+  );
 }

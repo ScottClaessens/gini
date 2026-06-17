@@ -2,7 +2,7 @@ library(stantargets)
 library(targets)
 library(tarchetypes)
 
-tar_option_set(packages = c("cmdstanr", "tidyverse"))
+tar_option_set(packages = c("cmdstanr", "patchwork", "tidyverse"))
 tar_source()
 
 list(
@@ -23,6 +23,12 @@ list(
     stan_files = "stan/model.stan",
     data = get_data_list(data),
     seed = 1
-  )
+  ),
+  
+  # ─────────────────────────────────────────
+  # Plot model predictions
+  # ─────────────────────────────────────────
+  
+  tar_target(plot, plot_model_predictions(data, fit_draws_model))
   
 )
