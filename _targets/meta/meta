@@ -1,4 +1,11 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 data_file|stem|55a6666557c52dc2|2cd30a861432af94|2c530c1562a7fbd1|-679625259|data/SiteGiniLevel.csv|t20490.6654210819s|s574550b|574550|file|local|vector|||1.385||
-data|stem|12abc5c16f29929c|237276f659722970|69b807ebbfbf0cb3|33550471||t20621.4000003695s|s42280b|42280|rds|local|vector|||0.261||
-load_data|function|0600e7380ccedf5a
+data|stem|5e1123358cfdc6ac|237276f659722970|67cc492e85f1e9d0|33550471||t20621.5613747689s|s21878b|21878|rds|local|vector|||0.265||
+fit_data|stem|85cbda5c04e888ad|5651e3259231c142|44824fba008e3bd7|2045157859||t20621.5663862122s|s7683b|7683|qs|local|vector|||0.007||
+load_data|function|f98e2df0dbc93bd0
+get_data_list|function|80204ec451df1ce9
+fit_file_model|stem|ec00029bcd627aa8|54a560e19a79606d|2c530c1562a7fbd1|1720039687|stan/model.stan|t20621.688019506s|s2130b|2130|file|local|vector|||0||
+fit_mcmc_model|stem|d53cb54ed581acbe|b952bdff903e4db6|72bc9dc6d88b27d9|-1258408334||t20621.6896566468s|s40153305b|40153305|qs|local|vector|||132.555||
+fit_diagnostics_model|stem|0f430f1ee43e06bc|99c0b3ae17211f24|91b6a683d4166458|1035351838||t20621.6896576757s|s86224b|86224|fst_tbl|local|vector|||0.001||
+fit_summary_model|stem|74b58d4eed3f9ea5|76a50aa46cf0de81|b5ceb8d495e9907b|1412698824||t20621.689737714s|s128244b|128244|fst_tbl|local|vector|||6.868||
+fit_draws_model|stem|4b245c933ec13246|c2057211be62d528|91b6a683d4166458|825927751||t20621.6897405355s|s51680799b|51680799|fst_tbl|local|vector|||0.126||

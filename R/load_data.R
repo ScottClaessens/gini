@@ -19,5 +19,8 @@ load_data <- function(data_file) {
       date       = Date,
       gini       = Gini,
       polity_pop = PolityPop
-    )
+    ) |>
+    drop_na(c(date, polity_pop)) |>
+    mutate(t = (date - min(date)) / (max(date) - min(date))) |>
+    arrange(t)
 }
