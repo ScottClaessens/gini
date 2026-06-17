@@ -2,7 +2,7 @@ library(stantargets)
 library(targets)
 library(tarchetypes)
 
-tar_option_set(packages = c("cmdstanr", "patchwork", "tidyverse"))
+tar_option_set(packages = c("bayesplot", "cmdstanr", "patchwork", "tidyverse"))
 tar_source()
 
 list(
@@ -26,9 +26,10 @@ list(
   ),
   
   # ─────────────────────────────────────────
-  # Plot model predictions
+  # Plot model predictions and checks
   # ─────────────────────────────────────────
   
-  tar_target(plot, plot_model_predictions(data, fit_draws_model))
-  
+  tar_target(plot_predictions, plot_model_predictions(data, fit_draws_model)),
+  tar_target(plot_pp_check, plot_predictive_check(data, fit_draws_model))
+
 )
