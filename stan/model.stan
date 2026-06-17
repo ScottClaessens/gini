@@ -17,12 +17,14 @@ functions {
   }
 }
 data {
-  int<lower=0> N;                             // total number of sites
-  int<lower=0> N_times;                       // number of unique time points
-  array[N] real<lower=0, upper=1> gini;       // gini
-  array[N] real<lower=0> pop_size;            // population size
-  array[N_times] real<lower=0, upper=1> t;    // unique time points (0-1)
-  array[N] int<lower=1, upper=N_times> t_idx; // index for time points
+  int<lower=0> N;                                 // total number of sites
+  int<lower=0> N_times;                           // n unique time points
+  int<lower=0> N_obs_pop;                         // n sites with obs pop size
+  array[N] real<lower=0, upper=1> gini;           // gini
+  array[N_obs_pop] real<lower=0> pop_size;        // population size
+  array[N_times] real<lower=0, upper=1> t;        // unique time points (0-1)
+  array[N_obs_pop] int<lower=1, upper=N> pop_idx; // index for pop size
+  array[N] int<lower=1, upper=N_times> t_idx;     // index for time points
 }
 parameters {
   real init_gini;      // initial state for gini
@@ -36,7 +38,7 @@ transformed parameters{
   latent[1][1] = init_gini;
   latent[1][2] = init_pop_size;
   latent[2:N_times] = ode_rk45(
-    ode, to_vector(latent[1, ]), 0.0, t[2:N_times], theta
+    ode, to_vector(latent[1, ]), 0, t[2:N_times], theta
   );
 }
 model {
@@ -53,8 +55,10 @@ model {
   // likelihood
   for (i in 1:N) {
     real mu = inv_logit(latent[t_idx[i], 1]);
-    real nu = latent[t_idx[i], 2];
     gini[i] ~ beta(mu * phi, (1 - mu) * phi);
+  }
+  for (i in 1:N_obs_pop) {
+    real nu = latent[t_idx[pop_idx[i]], 2];
     pop_size[i] ~ lognormal(nu, sigma);
   }
 }
