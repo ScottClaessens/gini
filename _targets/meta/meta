@@ -2,15 +2,15 @@ name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iterat
 data_file|stem|55a6666557c52dc2|2cd30a861432af94|2c530c1562a7fbd1|-679625259|data/SiteGiniLevel.csv|t20490.6654210819s|s574550b|574550|file|local|vector|||1.385||
 data|stem|b6dff8a4ee1498b6|237276f659722970|818275d5e0874f7e|33550471||t20621.712153135s|s43221b|43221|rds|local|vector|||0.475||
 fit_data|stem|fb50c33daea40ae2|5651e3259231c142|e049d9e6f6a807d8|2045157859||t20621.712153601s|s16205b|16205|qs|local|vector|||0.019||
-fit_file_model|stem|d33b033c5ef6e7d3|54a560e19a79606d|2c530c1562a7fbd1|1720039687|stan/model.stan|t20621.7343117295s|s2670b|2670|file|local|vector|||0||
-fit_mcmc_model|stem|d179626d21e582ca|b952bdff903e4db6|048eefb2638ac727|-1258408334||t20621.7367754081s|s86660843b|86660843|qs|local|vector|||193.005||
-fit_diagnostics_model|stem|d5d6b494d3904637|99c0b3ae17211f24|c9cfb191daa83a4b|1035351838||t20621.7367769282s|s85283b|85283|fst_tbl|local|vector|||0.001||
-fit_summary_model|stem|c8f86877fd70f5bc|76a50aa46cf0de81|6dd659773a5d1d31|1412698824||t20621.7369075436s|s280134b|280134|fst_tbl|local|vector|||11.206||
-fit_draws_model|stem|dfe4781ff90cd8a3|c2057211be62d528|c9cfb191daa83a4b|825927751||t20621.7369113821s|s111609041b|111609041|fst_tbl|local|vector|||0.122||
 plot|stem|ad012eaf701583d9|3cf47af2011b288a|2237df301233b7c8|874984291||t20621.7632350688s|s95268734b|95268734|rds|local|vector|||0.428|Removed 586 rows containing missing values or values outside the scale range (`geom_point()`).|
-plot_predictions|stem|ad012eaf701583d9|3cf47af2011b288a|2237df301233b7c8|-575206747||t20621.7746092087s|s95268734b|95268734|rds|local|vector|||0.405|Removed 586 rows containing missing values or values outside the scale range (`geom_point()`).|
-plot_pp_check|stem|889a1e97aa88a23b|1d6a2441d2ec9340|34ef46458e327a96|1602978789||t20621.7746201058s|s3046718b|3046718|rds|local|vector|||0.584||
+plot_pp_check|stem|0d55ea995ee990c4|1d6a2441d2ec9340|ecb5559bbf0256e2|1602978789||t20622.3566856538s|s3042599b|3042599|rds|local|vector|||1.525||
+plot_predictions|stem|25febbdba48ed434|3cf47af2011b288a|839e6a81e3554f06|-575206747||t20622.3613964745s|s94633859b|94633859|rds|local|vector|||2.543|Removed 586 rows containing missing values or values outside the scale range (`geom_point()`).|
 plot_predictive_check|function|ef0cd2d10dd9c8d9
 load_data|function|7a85ea40766691a4
-plot_model_predictions|function|95599a964a1714bb
+plot_model_predictions|function|19ce5c0b10a7b494
 get_data_list|function|e99e026650cfb4e9
+fit_file_model|stem|655b9ed5ec3f29dc|54a560e19a79606d|2c530c1562a7fbd1|1720039687|stan/model.stan|t20622.3698575543s|s2671b|2671|file|local|vector|||0.001||
+fit_mcmc_model|stem|28e9a6ec409c9bdf|e9d66d10eefd33fd|9738cb5950fb62b0|-1258408334||t20622.3718397939s|s86090595b|86090595|qs|local|vector|||130.381||
+fit_diagnostics_model|stem|d78fa2043053e26c|99c0b3ae17211f24|874fa7bc668790e6|1035351838||t20622.3718467412s|s89029b|89029|fst_tbl|local|vector|||0.002||
+fit_draws_model|stem|52684d152bbefcb9|c2057211be62d528|874fa7bc668790e6|825927751||t20622.3718583934s|s111608697b|111608697|fst_tbl|local|vector|||0.448||
+fit_summary_model|stem|a01467cfbfd08013|76a50aa46cf0de81|2a5240d9819cc1d6|1412698824||t20622.3720432845s|s280134b|280134|fst_tbl|local|vector|||15.289||

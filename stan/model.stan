@@ -1,6 +1,6 @@
 functions {
   vector ode(real time,      // time
-             vector state,   // states {y = gini, x = pop size}
+             vector state,   // states {y = logit(gini), x = log(pop_size)}
              vector theta) { // parameters
     // states
     real y = state[1];
@@ -11,8 +11,8 @@ functions {
     real beta  = theta[3];
     real r     = theta[4];
     // differential equations
-    real dy_dt = -exp(k) * (y - (alpha + (beta * log(x))));
-    real dx_dt = exp(r) * x;
+    real dy_dt = -exp(k) * (y - (alpha + beta * x));
+    real dx_dt = exp(r);
     return to_vector({dy_dt, dx_dt});
   }
 }
@@ -44,7 +44,7 @@ transformed parameters{
 model {
   // priors
   init_gini ~ normal(0, 1);
-  init_pop_size ~ normal(0, 1);
+  init_pop_size ~ normal(5, 1);
   theta[1] ~ normal(0, 1);
   theta[2] ~ normal(0, 1);
   theta[3] ~ normal(0, 1);

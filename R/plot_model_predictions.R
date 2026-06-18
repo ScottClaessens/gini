@@ -109,7 +109,7 @@ plot_model_predictions <- function(data, fit_draws_model) {
       )
     ) +
     scale_y_continuous(
-      name = "Population size",
+      name = "Population size (log scale)",
       transform = "log",
       breaks = c(1e+01, 1e+03, 1e+05, 1e+07),
       labels = scales::comma
