@@ -13,7 +13,8 @@ the following R packages:
 
 ```r
 install.packages(
-  c("bayesplot", "cmdstanr", "patchwork", "tarchetypes", "targets", "tidyverse")
+  c("bayesplot", "cmdstanr", "patchwork", "tarchetypes", 
+    "targets", "tidybayes", "tidyverse")
 )
 remotes::install_github("ropensci/stantargets")
 ```
