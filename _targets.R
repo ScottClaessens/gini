@@ -13,8 +13,9 @@ list(
   # Load data
   # ─────────────────────────────────────────
   
-  tar_target(data_file, "data/SiteGiniLevel.csv", format = "file"),
-  tar_target(data, load_data(data_file)),
+  tar_target(file_gini, "data/gini/SiteGiniLevel.csv", format = "file"),
+  tar_target(file_hyde, "data/hyde/hyde.csv", format = "file"),
+  tar_target(data, load_data(file_gini, file_hyde)),
   
   # ─────────────────────────────────────────
   # Fit Stan model
