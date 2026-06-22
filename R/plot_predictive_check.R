@@ -23,16 +23,15 @@ plot_predictive_check <- function(data, fit_draws_model) {
     )
   
   # y and yrep for pop size
-  y <- data$polity_pop
+  y <- data$pop_size
   yrep <-
     fit_draws_model |>
     dplyr::select(starts_with("pop_size_rep")) |>
     as.matrix()
   
   # plot for pop size
-  obs <- !is.na(y)
   pB <- 
-    bayesplot::ppc_dens_overlay(y[obs], yrep[1:50, obs]) +
+    bayesplot::ppc_dens_overlay(y, yrep[1:50, ]) +
     scale_x_continuous(
       name = "Population size (log scale)",
       transform = "log",

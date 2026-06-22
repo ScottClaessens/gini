@@ -52,7 +52,7 @@ generate_synthetic_data <- function(N_times = 1000,
         data.frame(
           t = ts[i],
           gini = rbeta(1, mu * phi, (1 - mu) * phi),
-          polity_pop = rlnorm(1, nu, sigma)
+          pop_size = rlnorm(1, nu, sigma)
         )
       )
     }

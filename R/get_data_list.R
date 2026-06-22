@@ -8,11 +8,9 @@ get_data_list <- function(data) {
   list(
     N         = nrow(data),
     N_times   = length(unique(data$t)),
-    N_obs_pop = sum(!is.na(data$polity_pop)),
     gini      = data$gini,
-    pop_size  = data$polity_pop[!is.na(data$polity_pop)],
+    pop_size  = data$pop_size,
     t         = unique(data$t),
-    pop_idx   = which(!is.na(data$polity_pop)),
     t_idx     = sapply(data$t, function(x) which(x == unique(data$t)))
   )
 }

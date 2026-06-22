@@ -89,7 +89,7 @@ plot_model_predictions <- function(data, fit_draws_model) {
       data = data,
       aes(
         x = date - 2026,
-        y = polity_pop
+        y = pop_size
       ),
       size = 0.2
     ) +
@@ -111,7 +111,7 @@ plot_model_predictions <- function(data, fit_draws_model) {
     scale_y_continuous(
       name = "Population size (log scale)",
       transform = "log",
-      breaks = c(1e+01, 1e+03, 1e+05, 1e+07),
+      breaks = c(1e-01, 1e+00, 1e+01, 1e+02, 1e+03, 1e+04),
       labels = scales::comma
     ) +
     scale_x_continuous(

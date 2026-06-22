@@ -19,11 +19,9 @@ functions {
 data {
   int<lower=0> N;                                 // total number of sites
   int<lower=0> N_times;                           // n unique time points
-  int<lower=0> N_obs_pop;                         // n sites with obs pop size
   array[N] real<lower=0, upper=1> gini;           // gini
-  array[N_obs_pop] real<lower=0> pop_size;        // population size
+  array[N] real<lower=0> pop_size;                // population size
   array[N_times] real<lower=0, upper=1> t;        // unique time points (0-1)
-  array[N_obs_pop] int<lower=1, upper=N> pop_idx; // index for pop size
   array[N] int<lower=1, upper=N_times> t_idx;     // index for time points
 }
 parameters {
@@ -44,7 +42,7 @@ transformed parameters{
 model {
   // priors
   init_gini ~ normal(0, 1);
-  init_pop_size ~ normal(5, 1);
+  init_pop_size ~ normal(3, 1);
   theta[1] ~ normal(0, 1);
   theta[2] ~ normal(0, 1);
   theta[3] ~ normal(0, 1);
@@ -54,12 +52,15 @@ model {
   
   // likelihood
   for (i in 1:N) {
+    
+    // gini
     real mu = inv_logit(latent[t_idx[i], 1]);
     gini[i] ~ beta(mu * phi, (1 - mu) * phi);
-  }
-  for (i in 1:N_obs_pop) {
-    real nu = latent[t_idx[pop_idx[i]], 2];
+    
+    // population size
+    real nu = latent[t_idx[i], 2];
     pop_size[i] ~ lognormal(nu, sigma);
+    
   }
 }
 generated quantities {
