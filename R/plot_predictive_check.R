@@ -35,11 +35,27 @@ plot_predictive_check <- function(data, fit_draws_model) {
     scale_x_continuous(
       name = "Population size (log scale)",
       transform = "log",
-      breaks = c(1e-02, 1e+01, 1e+04, 1e+07, 1e+10)
+      breaks = c(1e-02, 1e+01, 1e+04)
+    )
+  
+  # y and yrep for cropland
+  y <- data$cropland + 0.001
+  yrep <-
+    fit_draws_model |>
+    dplyr::select(starts_with("cropland_rep")) |>
+    as.matrix()
+  
+  # plot for cropland
+  pC <- 
+    bayesplot::ppc_dens_overlay(y, yrep[1:50, ]) +
+    scale_x_continuous(
+      name = "Cropland (log)",
+      transform = "log",
+      breaks = c(1e-02, 1e+01, 1e+04)
     )
   
   # combine
-  out <- (pA / pB) + plot_layout(guides = "collect")
+  out <- pA + pB + pC + guide_area() + plot_layout(guides = "collect")
   
   # save
   ggsave(

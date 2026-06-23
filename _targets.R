@@ -25,6 +25,8 @@ list(
     fit,
     stan_files = "stan/model.stan",
     data = get_data_list(data),
+    iter_sampling = 2000,
+    iter_warmup = 2000,
     parallel_chains = 4,
     seed = 1
   ),
@@ -34,20 +36,6 @@ list(
   # ─────────────────────────────────────────
   
   tar_target(plot_predictions, plot_model_predictions(data, fit_draws_model)),
-  tar_target(plot_pp_check, plot_predictive_check(data, fit_draws_model)),
-  
-  # ─────────────────────────────────────────
-  # Fit to synthetic data and plot
-  # ─────────────────────────────────────────
-  
-  tar_stan_mcmc(
-    sim,
-    stan_files = "stan/model.stan",
-    data = get_data_list(generate_synthetic_data()),
-    parallel_chains = 4,
-    seed = 1
-  ),
-  tar_target(plot_sim, plot_simulation(sim_draws_model))
-  
+  tar_target(plot_pp_check, plot_predictive_check(data, fit_draws_model))
 
 )

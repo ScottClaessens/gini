@@ -10,6 +10,7 @@ get_data_list <- function(data) {
     N_times   = length(unique(data$t)),
     gini      = data$gini,
     pop_size  = data$pop_size,
+    cropland  = data$cropland + 0.001, # ensure positive real
     t         = unique(data$t),
     t_idx     = sapply(data$t, function(x) which(x == unique(data$t)))
   )
