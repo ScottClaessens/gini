@@ -22,13 +22,13 @@ functions {
   }
 }
 data {
-  int<lower=0> N;                                 // total number of sites
-  int<lower=0> N_times;                           // n unique time points
-  array[N] real<lower=0, upper=1> gini;           // gini
-  array[N] real<lower=0> pop_size;                // population size
-  array[N] real<lower=0> cropland;                // cropland
-  array[N_times] real<lower=0, upper=1> t;        // unique time points (0-1)
-  array[N] int<lower=1, upper=N_times> t_idx;     // index for time points
+  int<lower=0> N;                             // total number of sites
+  int<lower=0> N_times;                       // n unique time points
+  array[N] real<lower=0, upper=1> gini;       // gini
+  array[N] real<lower=0> pop_size;            // population size
+  array[N] real<lower=0> cropland;            // cropland
+  array[N_times] real<lower=0, upper=1> t;    // unique time points (0-1)
+  array[N] int<lower=1, upper=N_times> t_idx; // index for time points
 }
 parameters {
   real init_gini;              // initial state for gini
