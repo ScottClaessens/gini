@@ -3,18 +3,17 @@ functions {
              vector state,   // states
              vector theta) { // parameters
     // states
-    real G = state[1]; // G = inv_logit(gini)
-    real P = state[2]; // P = population size
-    real C = state[3]; // C = cropland
+    real G = state[1];  // G = inv_logit(gini)
+    real P = state[2];  // P = population size
+    real C = state[3];  // C = cropland
     // parameters
-    real rG = exp(theta[1]);   // rate of inequality mean reversion
-    real rP = exp(theta[2]);   // rate of population increase
-    real rC = exp(theta[3]);   // rate of cropland production
-    real K  = exp(theta[4]) +  // population carrying capacity
-      exp(theta[5]) * C;
-    real mu = theta[6] +       // equilibrium for inequality
-      (theta[7] * log(P)) + 
-      (theta[8] * log(C));
+    real rG = exp(theta[1]);     // rate of inequality mean reversion
+    real rP = exp(theta[2]);     // rate of population increase
+    real rC = exp(theta[3]);     // rate of cropland production
+    real K  = exp(theta[4]) * C; // population carrying capacity
+    real mu = theta[5] +         // equilibrium for inequality
+      (theta[6] * P) + 
+      (theta[7] * C);
     // differential equations
     real dG = rG * (mu - G);
     real dP = rP * P * (1 - (P / K));
@@ -35,16 +34,16 @@ parameters {
   real init_gini;      // initial state for gini (logit scale)
   real init_pop_size;  // initial state for population size (log scale)
   real init_cropland;  // initial state for cropland (log scale)
-  vector[8] theta;     // ode parameters
+  vector[7] theta;     // ode parameters
   real<lower=0> phi;   // beta precision for gini
   real<lower=0> sigma; // lognormal variance for population size
   real<lower=0> omega; // lognormal variance for cropland
 }
 transformed parameters{
   array[N_times] vector[3] latent;
-  latent[1][1] = init_gini;
-  latent[1][2] = exp(init_pop_size);
-  latent[1][3] = exp(init_cropland);
+  latent[1, 1] = init_gini;
+  latent[1, 2] = exp(init_pop_size);
+  latent[1, 3] = exp(init_cropland);
   latent[2:N_times] = ode_rk45(
     ode, to_vector(latent[1, ]), 0, t[2:N_times], theta
   );
@@ -61,17 +60,9 @@ model {
   
   // likelihood
   for (i in 1:N) {
-    
-    // gini
-    real mu = inv_logit(latent[t_idx[i], 1]);
-    gini[i] ~ beta(mu * phi, (1 - mu) * phi);
-    
-    // population size
+    gini[i] ~ beta_proportion(inv_logit(latent[t_idx[i], 1]), phi);
     pop_size[i] ~ lognormal(log(latent[t_idx[i], 2]), sigma);
-    
-    // cropland
     cropland[i] ~ lognormal(log(latent[t_idx[i], 3]), omega);
-    
   }
 }
 generated quantities {
@@ -83,16 +74,15 @@ generated quantities {
   
   // posterior predictive checks
   for (i in 1:N) {
-    real mu = inv_logit(latent[t_idx[i], 1]);
-    gini_rep[i] = beta_rng(mu * phi, (1 - mu) * phi);
+    gini_rep[i] = beta_proportion_rng(inv_logit(latent[t_idx[i], 1]), phi);
     pop_size_rep[i] = lognormal_rng(log(latent[t_idx[i], 2]), sigma);
     cropland_rep[i] = lognormal_rng(log(latent[t_idx[i], 3]), omega);
   }
   
   // smooth ode prediction over 0-1 range
-  latent_rep[1][1] = init_gini;
-  latent_rep[1][2] = exp(init_pop_size);
-  latent_rep[1][3] = exp(init_cropland);
+  latent_rep[1, 1] = init_gini;
+  latent_rep[1, 2] = exp(init_pop_size);
+  latent_rep[1, 3] = exp(init_cropland);
   latent_rep[2:100] = ode_rk45(
     ode, to_vector(latent_rep[1, ]), 0, t_rep[2:100], theta
   );
