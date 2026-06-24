@@ -53,9 +53,9 @@ model {
   init_gini ~ normal(-1, 0.5);
   init_pop_size ~ normal(0, 1);
   init_cropland ~ normal(-5, 1);
-  theta[{1,2,3}] ~ normal(0, 1);
+  theta[{1,2,3,6,7}] ~ normal(0, 1);
+  theta[5] ~ normal(0, 0.2);
   theta[4] ~ normal(8, 1);
-  theta[{5,6,7}] ~ normal(0, 0.2);
   phi ~ exponential(1);
   sigma ~ exponential(1);
   omega ~ exponential(1);
