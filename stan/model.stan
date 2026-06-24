@@ -7,16 +7,17 @@ functions {
     real P = state[2]; // P = population size
     real C = state[3]; // C = cropland
     // parameters
-    real rP = exp(theta[1]);                // rate of population change
-    real K  = exp(theta[2] + theta[3] * C); // additional carrying capacity
-    real rC = exp(theta[4]);                // rate of cropland production
-    real rG = exp(theta[5]);                // rate of inequality mean reversion
-    real mu = theta[6] +                    // equilibrium mean for inequality
+    real rG = exp(theta[1]);   // rate of inequality mean reversion
+    real rP = exp(theta[2]);   // rate of population increase
+    real rC = exp(theta[3]);   // rate of cropland production
+    real K  = exp(theta[4]) +  // population carrying capacity
+      exp(theta[5]) * C;
+    real mu = theta[6] +       // equilibrium for inequality
       (theta[7] * log(P)) + 
       (theta[8] * log(C));
     // differential equations
     real dG = rG * (mu - G);
-    real dP = rP * P * (1 - (P / (P + K)));
+    real dP = rP * P * (1 - (P / K));
     real dC = rC * P;
     return to_vector({dG, dP, dC});
   }
