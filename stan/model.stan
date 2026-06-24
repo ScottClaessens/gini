@@ -32,19 +32,19 @@ data {
   array[N] int<lower=1, upper=N_times> t_idx; // index for time points
 }
 parameters {
-  real init_gini;              // initial state for gini
-  real<lower=0> init_pop_size; // initial state for population size
-  real<lower=0> init_cropland; // initial state for cropland
-  vector[8] theta;             // ode parameters
-  real<lower=0> phi;           // beta precision for gini
-  real<lower=0> sigma;         // lognormal variance for population size
-  real<lower=0> omega;         // lognormal variance for cropland
+  real init_gini;      // initial state for gini (logit scale)
+  real init_pop_size;  // initial state for population size (log scale)
+  real init_cropland;  // initial state for cropland (log scale)
+  vector[8] theta;     // ode parameters
+  real<lower=0> phi;   // beta precision for gini
+  real<lower=0> sigma; // lognormal variance for population size
+  real<lower=0> omega; // lognormal variance for cropland
 }
 transformed parameters{
   array[N_times] vector[3] latent;
   latent[1][1] = init_gini;
-  latent[1][2] = init_pop_size;
-  latent[1][3] = init_cropland;
+  latent[1][2] = exp(init_pop_size);
+  latent[1][3] = exp(init_cropland);
   latent[2:N_times] = ode_rk45(
     ode, to_vector(latent[1, ]), 0, t[2:N_times], theta
   );
@@ -52,8 +52,8 @@ transformed parameters{
 model {
   // priors
   init_gini ~ normal(0, 1);
-  init_pop_size ~ lognormal(0, 1);
-  init_cropland ~ lognormal(0, 1);
+  init_pop_size ~ normal(0, 1);
+  init_cropland ~ normal(0, 1);
   theta ~ normal(0, 1);
   phi ~ exponential(1);
   sigma ~ exponential(1);
@@ -91,8 +91,8 @@ generated quantities {
   
   // smooth ode prediction over 0-1 range
   latent_rep[1][1] = init_gini;
-  latent_rep[1][2] = init_pop_size;
-  latent_rep[1][3] = init_cropland;
+  latent_rep[1][2] = exp(init_pop_size);
+  latent_rep[1][3] = exp(init_cropland);
   latent_rep[2:100] = ode_rk45(
     ode, to_vector(latent_rep[1, ]), 0, t_rep[2:100], theta
   );

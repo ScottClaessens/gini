@@ -8,9 +8,8 @@
 plot_model_predictions <- function(data, fit_draws_model) {
   
   # plotting function
-  plot_fun <- function(var_id = 1, var_name = "gini", pred_transform = plogis,
-                       data_transform = function(x) x, 
-                       ylab = "Wealth inequality (Gini)", ylim = c(0, 1)) {
+  plot_fun <- function(var_id, var_name, pred_transform,
+                       data_transform, ylab, ylim) {
     fit_draws_model |>
       dplyr::select(
         starts_with("latent_rep") & ends_with(paste0(var_id, "]"))
