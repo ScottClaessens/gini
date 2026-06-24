@@ -22,49 +22,69 @@ functions {
   }
 }
 data {
-  int<lower=0> N;                             // total number of sites
-  int<lower=0> N_times;                       // n unique time points
-  array[N] real<lower=0, upper=1> gini;       // gini
-  array[N] real<lower=0> pop_size;            // population size
-  array[N] real<lower=0> cropland;            // cropland
-  array[N_times] real<lower=0, upper=1> t;    // unique time points (0-1)
-  array[N] int<lower=1, upper=N_times> t_idx; // index for time points
+  int<lower=0> N;                                // total number of sites
+  int<lower=0, upper=N> N_regions;               // number of regions
+  int<lower=0, upper=N> N_times;                 // number of unique time points
+  array[N] real<lower=0, upper=1> gini;          // gini
+  array[N] real<lower=0> pop_size;               // population size
+  array[N] real<lower=0> cropland;               // cropland
+  array[N] int<lower=1, upper=N_regions> region; // region id
+  array[N_times] real<lower=0, upper=1> t;       // unique time points (0-1)
+  array[N] int<lower=1, upper=N_times> t_idx;    // index for time points
 }
 parameters {
-  real init_gini;      // initial state for gini (logit scale)
-  real init_pop_size;  // initial state for population size (log scale)
-  real init_cropland;  // initial state for cropland (log scale)
-  vector[7] theta;     // ode parameters
-  real<lower=0> phi;   // beta precision for gini
-  real<lower=0> sigma; // lognormal variance for population size
-  real<lower=0> omega; // lognormal variance for cropland
+  real init_gini;               // initial state for gini (logit scale)
+  real init_pop_size;           // initial state for population size (log scale)
+  real init_cropland;           // initial state for cropland (log scale)
+  vector[7] theta;              // ode parameters
+  array[3] real<lower=0> tau;   // region SDs
+  array[3] vector[N_regions] z; // region-specific effects
+  real<lower=0> phi;            // beta precision for gini
+  real<lower=0> sigma;          // lognormal variance for population size
+  real<lower=0> omega;          // lognormal variance for cropland
 }
 transformed parameters{
-  array[N_times] vector[3] latent;
-  latent[1, 1] = init_gini;
-  latent[1, 2] = exp(init_pop_size);
-  latent[1, 3] = exp(init_cropland);
-  latent[2:N_times] = ode_rk45(
-    ode, to_vector(latent[1, ]), 0, t[2:N_times], theta
-  );
+  // construct region-specific effects
+  vector[N_regions] init_gini_r     = init_gini     + (tau[1] * z[1]);
+  vector[N_regions] init_pop_size_r = init_pop_size + (tau[2] * z[2]);
+  vector[N_regions] init_cropland_r = init_cropland + (tau[3] * z[3]);
+  
+  // solve ode
+  array[N_regions, N_times] vector[3] latent;
+  for (r in 1:N_regions) {
+    latent[r, 1, 1] = init_gini_r[r];
+    latent[r, 1, 2] = exp(init_pop_size_r[r]);
+    latent[r, 1, 3] = exp(init_cropland_r[r]);
+    latent[r, 2:N_times] = ode_rk45(
+      ode, to_vector(latent[r, 1, ]), 0, t[2:N_times], theta
+    );
+  }
 }
 model {
-  // priors
+  // priors for global parameters
   init_gini ~ normal(-1, 0.5);
   init_pop_size ~ normal(0, 1);
   init_cropland ~ normal(-5, 1);
   theta[{1,2,3,6,7}] ~ normal(0, 1);
   theta[5] ~ normal(0, 0.2);
-  theta[4] ~ normal(8, 1);
+  theta[4] ~ normal(6.5, 0.5);
+  
+  // priors for region-specific parameters
+  for (i in 1:3) {
+    tau[i] ~ exponential(1);
+    z[i] ~ normal(0, 1);
+  }
+  
+  // priors for measurement error
   phi ~ exponential(1);
   sigma ~ exponential(1);
   omega ~ exponential(1);
   
   // likelihood
   for (i in 1:N) {
-    gini[i] ~ beta_proportion(inv_logit(latent[t_idx[i], 1]), phi);
-    pop_size[i] ~ lognormal(log(latent[t_idx[i], 2]), sigma);
-    cropland[i] ~ lognormal(log(latent[t_idx[i], 3]), omega);
+    gini[i] ~ beta_proportion(inv_logit(latent[region[i], t_idx[i], 1]), phi);
+    pop_size[i] ~ lognormal(log(latent[region[i], t_idx[i], 2]), sigma);
+    cropland[i] ~ lognormal(log(latent[region[i], t_idx[i], 3]), omega);
   }
 }
 generated quantities {
@@ -76,9 +96,15 @@ generated quantities {
   
   // posterior predictive checks
   for (i in 1:N) {
-    gini_rep[i] = beta_proportion_rng(inv_logit(latent[t_idx[i], 1]), phi);
-    pop_size_rep[i] = lognormal_rng(log(latent[t_idx[i], 2]), sigma);
-    cropland_rep[i] = lognormal_rng(log(latent[t_idx[i], 3]), omega);
+    gini_rep[i] = beta_proportion_rng(
+      inv_logit(latent[region[i], t_idx[i], 1]), phi
+    );
+    pop_size_rep[i] = lognormal_rng(
+      log(latent[region[i], t_idx[i], 2]), sigma
+    );
+    cropland_rep[i] = lognormal_rng(
+      log(latent[region[i], t_idx[i], 3]), omega
+    );
   }
   
   // smooth ode prediction over 0-1 range
