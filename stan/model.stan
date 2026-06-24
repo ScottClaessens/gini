@@ -12,8 +12,8 @@ functions {
     real rC = exp(theta[3]);     // rate of cropland production
     real K  = exp(theta[4]) * C; // population carrying capacity
     real mu = theta[5] +         // equilibrium for inequality
-      (theta[6] * P) + 
-      (theta[7] * C);
+      (theta[6] * log(P + 1)) + 
+      (theta[7] * log(C + 1));
     // differential equations
     real dG = rG * (mu - G);
     real dP = rP * P * (1 - (P / K));
@@ -50,10 +50,12 @@ transformed parameters{
 }
 model {
   // priors
-  init_gini ~ normal(0, 1);
+  init_gini ~ normal(-1, 0.5);
   init_pop_size ~ normal(0, 1);
-  init_cropland ~ normal(0, 1);
-  theta ~ normal(0, 1);
+  init_cropland ~ normal(-5, 1);
+  theta[{1,2,3}] ~ normal(0, 1);
+  theta[4] ~ normal(8, 1);
+  theta[{5,6,7}] ~ normal(0, 0.2);
   phi ~ exponential(1);
   sigma ~ exponential(1);
   omega ~ exponential(1);
