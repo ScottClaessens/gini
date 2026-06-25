@@ -1,11 +1,11 @@
-#' Plot time-series predictions from Stan model
+#' Plot global time-series predictions from Stan model
 #'
 #' @param data Tibble of raw data
 #' @param fit_draws_model Tibble of posterior draws from the model
 #'
 #' @returns A ggplot object
 #'
-plot_model_predictions <- function(data, fit_draws_model) {
+plot_global_predictions <- function(data, fit_draws_model) {
   
   # plotting function
   plot_fun <- function(var_id, var_name, pred_transform,
@@ -100,7 +100,7 @@ plot_model_predictions <- function(data, fit_draws_model) {
   # save
   ggsave(
     plot = out,
-    filename = "plots/predictions.pdf",
+    filename = "plots/global_predictions.pdf",
     height = 7,
     width = 5
   )

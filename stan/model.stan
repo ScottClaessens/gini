@@ -36,8 +36,8 @@ parameters {
   real init_pop_size;            // initial state for population size (log scale)
   real init_cropland;            // initial state for cropland (log scale)
   vector[6] theta;               // ode parameters
-  array[10] real<lower=0> tau;   // region SDs
-  array[10] vector[N_regions] z; // region-specific effects
+  array[9] real<lower=0> tau;    // region SDs
+  array[9] vector[N_regions] z;  // region-specific effects
   real<lower=0> phi;             // beta precision for gini
   real<lower=0> sigma;           // lognormal variance for population size
   real<lower=0> omega;           // lognormal variance for cropland
@@ -50,7 +50,7 @@ transformed parameters{
   array[N_regions] vector[6] theta_r;
   for (r in 1:N_regions) {
     for (k in 1:6) {
-      theta_r[r, k] = theta[k] + (tau[k + 3] * z[k + 3, r]);
+      theta_r[r][k] = theta[k] + (tau[k + 3] * z[k + 3][r]);
     }
   }
   
@@ -73,8 +73,8 @@ model {
   theta ~ normal(0, 1);
   
   // priors for region-specific parameters
-  for (i in 1:10) {
-    tau[i] ~ exponential(3);
+  for (i in 1:9) {
+    tau[i] ~ exponential(2);
     z[i] ~ normal(0, 1);
   }
   
