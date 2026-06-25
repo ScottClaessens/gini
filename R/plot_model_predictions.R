@@ -12,12 +12,12 @@ plot_model_predictions <- function(data, fit_draws_model) {
                        data_transform, ylab, ylim) {
     fit_draws_model |>
       dplyr::select(
-        starts_with("latent_rep") & ends_with(paste0(var_id, "]"))
+        starts_with("global_latent_rep") & ends_with(paste0(var_id, "]"))
       ) |>
       pivot_longer(
         cols = everything(),
         names_to = "id",
-        names_pattern = paste0("latent_rep\\[(.*),", var_id, "]")
+        names_pattern = paste0("global_latent_rep\\[(.*),", var_id, "]")
       ) |>
       mutate(id = as.numeric(id)) |>
       group_by(id) |>
@@ -79,7 +79,7 @@ plot_model_predictions <- function(data, fit_draws_model) {
     plot_fun(
       var_id = 2,
       var_name = "pop_size",
-      pred_transform = log,
+      pred_transform = function(x) x,
       data_transform = log,
       ylab = "Population size (log)",
       ylim = NULL
@@ -88,7 +88,7 @@ plot_model_predictions <- function(data, fit_draws_model) {
     plot_fun(
       var_id = 3,
       var_name = "cropland",
-      pred_transform = log,
+      pred_transform = function(x) x,
       data_transform = function(x) log(x + 0.001),
       ylab = "Cropland (log)",
       ylim = NULL

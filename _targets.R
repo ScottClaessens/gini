@@ -25,8 +25,6 @@ list(
     fit,
     stan_files = "stan/model.stan",
     data = get_data_list(data),
-    iter_sampling = 2000,
-    iter_warmup = 2000,
     parallel_chains = 4,
     seed = 1
   ),
