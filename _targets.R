@@ -15,35 +15,6 @@ list(
   
   tar_target(file_gini, "data/gini/SiteGiniLevel.csv", format = "file"),
   tar_target(file_hyde, "data/hyde/hyde.csv", format = "file"),
-  tar_target(data, load_data(file_gini, file_hyde)),
-  
-  # ─────────────────────────────────────────
-  # Fit Stan model
-  # ─────────────────────────────────────────
-  
-  tar_stan_mcmc(
-    fit,
-    stan_files = "stan/model.stan",
-    data = get_data_list(data),
-    parallel_chains = 4,
-    seed = 1
-  ),
-  
-  # ─────────────────────────────────────────
-  # Plot model predictions and checks
-  # ─────────────────────────────────────────
-  
-  tar_target(
-    plot_pred_global,
-    plot_global_predictions(data, fit_draws_model)
-  ),
-  tar_target(
-    plot_pred_regional,
-    plot_regional_predictions(data, fit_draws_model)
-  ),
-  tar_target(
-    plot_pp_check,
-    plot_predictive_check(data, fit_draws_model)
-  )
+  tar_target(data, load_data(file_gini, file_hyde))
 
 )
