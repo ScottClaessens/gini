@@ -1,5 +1,12 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 file_gini|stem|55a6666557c52dc2|f68edb0f308568cc|2c530c1562a7fbd1|1176102249|data/gini/SiteGiniLevel.csv|t20490.6654210819s|s574550b|574550|file|local|vector|||1.78||
 file_hyde|stem|19175ed0a474313c|9ef94c91729879a2|2c530c1562a7fbd1|1001141386|data/hyde/hyde.csv|t20630.6467691788s|s2329572b|2329572|file|local|vector|||0||
-load_data|function|429c368c49e6f467
-data|stem|99d98876e9427759|e668cf0f8d2153b6|ad49f3353f8dc85a|33550471||t20630.7260058483s|s80802b|80802|rds|local|vector|||0.231||
+fit_file_model|stem|2d28f305393bc56b|54a560e19a79606d|2c530c1562a7fbd1|1720039687|stan/model.stan|t20630.8978833078s|s2178b|2178|file|local|vector|||0||
+data|stem|5b94b74c2af88f2d|e668cf0f8d2153b6|81a3bcd901af7f41|33550471||t20630.8984634965s|s80759b|80759|rds|local|vector|||0.447||
+load_data|function|a13531bdd011d221
+get_data_list|function|2eb194de2ce47d16
+fit_data|stem|702c00969027fe3c|5651e3259231c142|0ecad7db088db817|2045157859||t20630.9035967846s|s59896b|59896|qs|local|vector|||0.664||
+fit_mcmc_model|stem|d22717d907204790|e9d66d10eefd33fd|cd9abd58c519b175|-1258408334||t20630.9152400045s|s1140059470b|1140059470|qs|local|vector|||1003.776||
+fit_diagnostics_model|stem|3d07f5d57fadde7a|99c0b3ae17211f24|e2e69bca57d02873|1035351838||t20630.9152507761s|s73711b|73711|fst_tbl|local|vector|||0||
+fit_summary_model|stem|015fdfb7b9fe2c6b|76a50aa46cf0de81|33424f7d0b7d2d2b|1412698824||t20630.9169299705s|s3506292b|3506292|fst_tbl|local|vector|||144.506||
+fit_draws_model|stem|9abbbab14c15ef1a|c2057211be62d528|e2e69bca57d02873|825927751||t20630.916977196s|s1428938657b|1428938657|fst_tbl|local|vector|||1.757||

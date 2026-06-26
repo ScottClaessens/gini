@@ -61,6 +61,7 @@ load_data <- function(file_gini, file_hyde) {
       .by = "subregion",
       .direction = "updown"
     ) |>
+    filter(date >= -10000) |>
     arrange(subregion, date)
   
 }
