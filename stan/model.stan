@@ -5,9 +5,9 @@ functions {
     // states
     real logP = state[1]; // log(pop_size)
     // parameters
-    real rP = exp(theta[1]); // rate of population growth 
+    real rP = exp(theta[1]); // rate of population growth
     // differential equation
-    real dlogP = rP; // dP = rP * P
+    real dlogP = rP;
     return to_vector({dlogP});
   }
 }
@@ -34,7 +34,7 @@ transformed parameters{
   vector[N_regions] init_pop_size_r = init_pop_size + (tau[1] * z[1]);
   array[N_regions] vector[1] theta_r;
   for (r in 1:N_regions) {
-    theta_r[r][1] = theta[1] + (tau[2] * z[2][1]);
+    theta_r[r][1] = theta[1] + (tau[2] * z[2][r]);
   }
   
   // solve ode
@@ -50,15 +50,16 @@ model {
   // priors
   init_pop_size ~ normal(0, 1);
   theta ~ normal(0, 1);
-  tau ~ exponential(2);
+  tau ~ exponential(1);
   for (i in 1:2) {
     z[i] ~ normal(0, 1);
   }
-  sigma ~ exponential(2);
+  sigma ~ exponential(1);
   
   // likelihood
   for (i in 1:N_obs_pop) {
-    pop_size[i] ~ lognormal(latent[region[pop_idx[i]], date_idx[i]][1], sigma);
+    real mu = latent[region[pop_idx[i]], date_idx[pop_idx[i]]][1];
+    pop_size[i] ~ lognormal(mu, sigma);
   }
 }
 generated quantities {
@@ -70,14 +71,15 @@ generated quantities {
   // posterior predictive checks
   for (i in 1:N_obs_pop) {
     pop_size_rep[i] = lognormal_rng(
-      latent[region[pop_idx[i]], date_idx[i]][1], sigma
+      latent[region[pop_idx[i]], date_idx[pop_idx[i]]][1], sigma
     );
   }
   
   // global ode prediction
   global_latent_rep[1][1] = init_pop_size;
   global_latent_rep[2:100] = ode_rk45(
-    ode, to_vector(global_latent_rep[1]), date[1], date_rep[2:100], theta
+    ode, to_vector(global_latent_rep[1]), 
+    date_rep[1], date_rep[2:100], theta
   );
   
   // regional ode prediction
@@ -85,7 +87,7 @@ generated quantities {
     regional_latent_rep[r, 1][1] = init_pop_size_r[r];
     regional_latent_rep[r, 2:100] = ode_rk45(
       ode, to_vector(regional_latent_rep[r, 1]), 
-      date[1], date_rep[2:100], theta_r[r]
+      date_rep[1], date_rep[2:100], theta_r[r]
     );
   }
 }
