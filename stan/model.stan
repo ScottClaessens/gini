@@ -61,3 +61,31 @@ model {
     pop_size[i] ~ lognormal(latent[region[pop_idx[i]], date_idx[i]][1], sigma);
   }
 }
+generated quantities {
+  array[N_obs_pop] real pop_size_rep;
+  array[100] real date_rep = linspaced_array(100, date[1], date[N_dates]);
+  array[100] vector[1] global_latent_rep;
+  array[N_regions, 100] vector[1] regional_latent_rep;
+  
+  // posterior predictive checks
+  for (i in 1:N_obs_pop) {
+    pop_size_rep[i] = lognormal_rng(
+      latent[region[pop_idx[i]], date_idx[i]][1], sigma
+    );
+  }
+  
+  // global ode prediction
+  global_latent_rep[1][1] = init_pop_size;
+  global_latent_rep[2:100] = ode_rk45(
+    ode, to_vector(global_latent_rep[1]), date[1], date_rep[2:100], theta
+  );
+  
+  // regional ode prediction
+  for (r in 1:N_regions) {
+    regional_latent_rep[r, 1][1] = init_pop_size_r[r];
+    regional_latent_rep[r, 2:100] = ode_rk45(
+      ode, to_vector(regional_latent_rep[r, 1]), 
+      date[1], date_rep[2:100], theta_r[r]
+    );
+  }
+}
