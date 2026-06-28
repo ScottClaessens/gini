@@ -23,6 +23,9 @@ plot_predictive_check <- function(data, fit_draws_model) {
       breaks = c(1e-02, 1e+01, 1e+04)
     )
   
+  # cleanup
+  rm(data, fit_draws_model)
+  
   # save
   ggsave(
     plot = out,

@@ -61,7 +61,8 @@ load_data <- function(file_gini, file_hyde) {
       .by = "subregion",
       .direction = "updown"
     ) |>
-    filter(date >= -10000 & subregion %in% levels(factor(subregion))[1:12]) |>
+    # retain only records after 10,000 BC
+    filter(date >= -10000) |>
     arrange(subregion, date)
   
 }

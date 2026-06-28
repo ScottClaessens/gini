@@ -38,7 +38,8 @@ plot_regional_predictions <- function(data, fit_draws_model) {
         x = (date - 2026) / 1000,
         y = value
       ),
-      size = 0.2
+      size = 0.05,
+      colour = "lightgrey"
     ) +
     geom_ribbon(
       aes(
@@ -64,14 +65,17 @@ plot_regional_predictions <- function(data, fit_draws_model) {
       name = "Population size (log)"
     ) +
     theme_classic() +
-    theme(strip.text = element_text(size = 6))
+    theme(strip.text = element_text(size = 4))
+  
+  # cleanup
+  rm(data, fit_draws_model)
   
   # save
   ggsave(
     plot = out,
     filename = "plots/regional_predictions.pdf",
-    height = 5,
-    width = 6
+    height = 8,
+    width = 8
   )
   
   # return

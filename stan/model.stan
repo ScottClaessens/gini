@@ -1,13 +1,23 @@
 functions {
-  vector ode(real time,      // time
+  vector ode(real date,      // date
              vector state,   // states
              vector theta) { // parameters
     // states
     real logP = state[1]; // log(pop_size)
     // parameters
-    real rP = exp(theta[1]); // rate of population growth
-    // differential equation
-    real dlogP = rP;
+    vector[3] rP; // rates of population growth
+    rP[1] = exp(theta[1]);
+    rP[2] = exp(theta[2]);
+    rP[3] = exp(theta[3]);
+    // differential equations
+    real dlogP;
+    if (date < 0) {
+      dlogP = rP[1];
+    } else if (date >= 0 && date <= 17) {
+      dlogP = rP[2];
+    } else {
+      dlogP = rP[3];
+    }
     return to_vector({dlogP});
   }
 }
@@ -24,17 +34,19 @@ data {
 }
 parameters {
   real init_pop_size;            // initial state for population size (log)
-  vector[1] theta;               // ode parameters
-  array[2] real<lower=0> tau;    // region SDs
-  array[2] vector[N_regions] z;  // region-specific effects
+  vector[3] theta;               // ode parameters
+  array[4] real<lower=0> tau;    // region SDs
+  array[4] vector[N_regions] z;  // region-specific effects
   real<lower=0> sigma;           // lognormal variance for population size
 }
 transformed parameters{
   // construct region-specific effects
   vector[N_regions] init_pop_size_r = init_pop_size + (tau[1] * z[1]);
-  array[N_regions] vector[1] theta_r;
+  array[N_regions] vector[3] theta_r;
   for (r in 1:N_regions) {
-    theta_r[r][1] = theta[1] + (tau[2] * z[2][r]);
+    for (k in 1:3) {
+      theta_r[r][k] = theta[k] + (tau[k + 1] * z[k + 1][r]);
+    }
   }
   
   // solve ode
@@ -51,7 +63,7 @@ model {
   init_pop_size ~ normal(0, 1);
   theta ~ normal(0, 1);
   tau ~ exponential(1);
-  for (i in 1:2) {
+  for (i in 1:4) {
     z[i] ~ normal(0, 1);
   }
   sigma ~ exponential(1);
