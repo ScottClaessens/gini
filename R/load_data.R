@@ -22,6 +22,11 @@ load_data <- function(file_gini, file_hyde) {
     ) |>
     # drop sites with no information on dates or longitude/latitude
     drop_na(c(date, longitude, latitude)) |>
+    # nudge lon-lat coordinate for Kodiak Island to match hyde data
+    mutate(
+      longitude = ifelse(subregion == "North Pacific", -153.279, longitude),
+      latitude = ifelse(subregion == "North Pacific", 57.176, latitude)
+    ) |>
     # fix some subregions to ensure one subregion per lon-lat point
     mutate(
       subregion = paste(region, subregion),

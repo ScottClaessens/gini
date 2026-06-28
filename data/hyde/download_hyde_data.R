@@ -34,6 +34,12 @@ gini <- read_csv("data/gini/SiteGiniLevel.csv", show_col_types = FALSE)
 # drop sites without longitude-latitude coordinates
 gini <- drop_na(gini, c(Longitude, Latitude))
 
+# nudge lon-lat coordinate for Kodiak Island to match HYDE dataset
+gini$Longitude <- ifelse(gini$Subregion == "North Pacific", 
+                         -153.279, gini$Longitude)
+gini$Latitude <- ifelse(gini$Subregion == "North Pacific",
+                        57.176, gini$Latitude)
+
 # get unique longitude-latitude coordinates
 unique_lon_lat <- unique(gini[, c("Longitude", "Latitude")])
 
