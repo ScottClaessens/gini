@@ -24,7 +24,7 @@ data {
   int<lower=1, upper=N> N_obs_crop;              // number of observed cropland
   array[N_dates] real date;                      // dates (in millenia)
   int i0;                                        // index for 0 CE
-  int i1700;                                     // index for 1700 CE
+  int i1600;                                     // index for 1600 CE
   array[N] int<lower=1, upper=N_regions> region; // region ids
   array[N_obs_pop] real<lower=0> pop_size;       // population size
   array[N_obs_crop] real<lower=0> cropland;      // population size
@@ -67,14 +67,14 @@ transformed parameters{
       date[1], date[2:i0], theta_r[1, r]
     );
     // second period = 0 CE to 1700 CE
-    latent[r, (i0 + 1):i1700] = ode_rk45(
+    latent[r, (i0 + 1):i1600] = ode_rk45(
       ode, to_vector(latent[r, i0]),
-      date[i0], date[(i0 + 1):i1700], theta_r[2, r]
+      date[i0], date[(i0 + 1):i1600], theta_r[2, r]
     );
     // third period = 1700 CE to 1980 CE
-    latent[r, (i1700 + 1):N_dates] = ode_rk45(
-      ode, to_vector(latent[r, i1700]),
-      date[i1700], date[(i1700 + 1):N_dates], theta_r[3, r]
+    latent[r, (i1600 + 1):N_dates] = ode_rk45(
+      ode, to_vector(latent[r, i1600]),
+      date[i1600], date[(i1600 + 1):N_dates], theta_r[3, r]
     );
   }
 }
@@ -128,13 +128,13 @@ generated quantities {
     ode, to_vector(global_latent_rep[1]), 
     date_rep[1], date_rep[2:101], theta[1]
   );
-  global_latent_rep[102:118] = ode_rk45(
+  global_latent_rep[102:117] = ode_rk45(
     ode, to_vector(global_latent_rep[101]), 
-    date_rep[101], date_rep[102:118], theta[2]
+    date_rep[101], date_rep[102:117], theta[2]
   );
-  global_latent_rep[119:121] = ode_rk45(
-    ode, to_vector(global_latent_rep[118]), 
-    date_rep[118], date_rep[119:121], theta[3]
+  global_latent_rep[118:121] = ode_rk45(
+    ode, to_vector(global_latent_rep[117]), 
+    date_rep[117], date_rep[118:121], theta[3]
   );
   
   // regional ode prediction across three periods
@@ -145,13 +145,13 @@ generated quantities {
       ode, to_vector(regional_latent_rep[r, 1]), 
       date_rep[1], date_rep[2:101], theta_r[1, r]
     );
-    regional_latent_rep[r, 102:118] = ode_rk45(
+    regional_latent_rep[r, 102:117] = ode_rk45(
       ode, to_vector(regional_latent_rep[r, 101]), 
-      date_rep[101], date_rep[102:118], theta_r[2, r]
+      date_rep[101], date_rep[102:117], theta_r[2, r]
     );
-    regional_latent_rep[r, 119:121] = ode_rk45(
-      ode, to_vector(regional_latent_rep[r, 118]), 
-      date_rep[118], date_rep[119:121], theta_r[3, r]
+    regional_latent_rep[r, 118:121] = ode_rk45(
+      ode, to_vector(regional_latent_rep[r, 117]), 
+      date_rep[117], date_rep[118:121], theta_r[3, r]
     );
   }
 }

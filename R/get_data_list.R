@@ -13,7 +13,7 @@ get_data_list <- function(data) {
     N_obs_crop = sum(!is.na(data$cropland)),
     date       = sort(unique(data$date)) / 100,
     i0         = which(sort(unique(data$date)) == 0),
-    i1700      = which(sort(unique(data$date)) == 1700),
+    i1600      = which(sort(unique(data$date)) == 1600),
     region     = as.numeric(factor(data$subregion)),
     pop_size   = data$pop_size[!is.na(data$pop_size)] + 0.001, # positive real
     cropland   = data$cropland[!is.na(data$cropland)] + 0.001, # positive real
