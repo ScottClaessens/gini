@@ -23,6 +23,8 @@ data {
   int<lower=1, upper=N> N_obs_pop;               // number of observed pop_size
   int<lower=1, upper=N> N_obs_crop;              // number of observed cropland
   array[N_dates] real date;                      // dates (in millenia)
+  int i0;                                        // index for 0 CE
+  int i1700;                                     // index for 1700 CE
   array[N] int<lower=1, upper=N_regions> region; // region ids
   array[N_obs_pop] real<lower=0> pop_size;       // population size
   array[N_obs_crop] real<lower=0> cropland;      // population size
@@ -31,32 +33,48 @@ data {
   array[N_obs_crop] int crop_idx;                // link cropland to records
 }
 parameters {
-  real init_pop_size;            // initial state for population size (log)
-  real init_cropland;            // initial state for cropland (log)
-  vector[2] theta;               // ode parameters
-  array[4] real<lower=0> tau;    // region SDs
-  array[4] vector[N_regions] z;  // region-specific effects
-  real<lower=0> sigma;           // lognormal variance for population size
-  real<lower=0> omega;           // lognormal variance for cropland
+  real init_pop_size;              // initial state for population size (log)
+  real init_cropland;              // initial state for cropland (log)
+  array[3] vector[2] theta;        // ode parameters over three time periods
+  array[8] real<lower=0> tau;   // region SDs
+  array[8] vector[N_regions] z; // region-specific effects
+  real<lower=0> sigma;             // lognormal variance for population size
+  real<lower=0> omega;             // lognormal variance for cropland
 }
 transformed parameters{
   // construct region-specific effects
   vector[N_regions] init_pop_size_r = init_pop_size + (tau[1] * z[1]);
   vector[N_regions] init_cropland_r = init_cropland + (tau[2] * z[2]);
-  array[N_regions] vector[2] theta_r;
-  for (r in 1:N_regions) {
-    for (k in 1:2) {
-      theta_r[r][k] = theta[k] + (tau[k + 2] * z[k + 2][r]);
+  array[3, N_regions] vector[2] theta_r;
+  for (p in 1:3) {
+    for (r in 1:N_regions) {
+      for (k in 1:2) {
+        int i = 2 + (p - 1) * 2 + k;
+        theta_r[p, r][k] = theta[p][k] + (tau[i] * z[i][r]);
+      }
     }
   }
   
   // solve ode
   array[N_regions, N_dates] vector[2] latent;
   for (r in 1:N_regions) {
+    // initial values
     latent[r, 1][1] = init_pop_size_r[r];
     latent[r, 1][2] = init_cropland_r[r];
-    latent[r, 2:N_dates] = ode_rk45(
-      ode, to_vector(latent[r, 1]), date[1], date[2:N_dates], theta_r[r]
+    // first period = 10,000 BCE to 0 CE
+    latent[r, 2:i0] = ode_rk45(
+      ode, to_vector(latent[r, 1]), 
+      date[1], date[2:i0], theta_r[1, r]
+    );
+    // second period = 0 CE to 1700 CE
+    latent[r, (i0 + 1):i1700] = ode_rk45(
+      ode, to_vector(latent[r, i0]),
+      date[i0], date[(i0 + 1):i1700], theta_r[2, r]
+    );
+    // third period = 1700 CE to 1980 CE
+    latent[r, (i1700 + 1):N_dates] = ode_rk45(
+      ode, to_vector(latent[r, i1700]),
+      date[i1700], date[(i1700 + 1):N_dates], theta_r[3, r]
     );
   }
 }
@@ -64,11 +82,9 @@ model {
   // priors
   init_pop_size ~ normal(-1, 1);
   init_cropland ~ normal(-1, 1);
-  theta ~ normal(0, 1);
+  for (p in 1:3) theta[p] ~ normal(-1, 1);
+  for (i in 1:8) z[i] ~ normal(0, 1);
   tau ~ exponential(1);
-  for (i in 1:2) {
-    z[i] ~ normal(0, 1);
-  }
   sigma ~ exponential(1);
   omega ~ exponential(1);
   
@@ -87,9 +103,9 @@ model {
 generated quantities {
   array[N_obs_pop] real pop_size_rep;
   array[N_obs_crop] real cropland_rep;
-  array[100] real date_rep = linspaced_array(100, date[1], date[N_dates]);
-  array[100] vector[2] global_latent_rep;
-  array[N_regions, 100] vector[2] regional_latent_rep;
+  array[121] real date_rep = linspaced_array(121, -100, 20);
+  array[121] vector[2] global_latent_rep;
+  array[N_regions, 121] vector[2] regional_latent_rep;
   
   // posterior predictive check for population size
   for (i in 1:N_obs_pop) {
@@ -105,21 +121,37 @@ generated quantities {
     );
   }
   
-  // global ode prediction
+  // global ode prediction across three periods
   global_latent_rep[1][1] = init_pop_size;
   global_latent_rep[1][2] = init_cropland;
-  global_latent_rep[2:100] = ode_rk45(
+  global_latent_rep[2:101] = ode_rk45(
     ode, to_vector(global_latent_rep[1]), 
-    date_rep[1], date_rep[2:100], theta
+    date_rep[1], date_rep[2:101], theta[1]
+  );
+  global_latent_rep[102:118] = ode_rk45(
+    ode, to_vector(global_latent_rep[101]), 
+    date_rep[101], date_rep[102:118], theta[2]
+  );
+  global_latent_rep[119:121] = ode_rk45(
+    ode, to_vector(global_latent_rep[118]), 
+    date_rep[118], date_rep[119:121], theta[3]
   );
   
-  // regional ode prediction
+  // regional ode prediction across three periods
   for (r in 1:N_regions) {
     regional_latent_rep[r, 1][1] = init_pop_size_r[r];
     regional_latent_rep[r, 1][2] = init_cropland_r[r];
-    regional_latent_rep[r, 2:100] = ode_rk45(
+    regional_latent_rep[r, 2:101] = ode_rk45(
       ode, to_vector(regional_latent_rep[r, 1]), 
-      date_rep[1], date_rep[2:100], theta_r[r]
+      date_rep[1], date_rep[2:101], theta_r[1, r]
+    );
+    regional_latent_rep[r, 102:118] = ode_rk45(
+      ode, to_vector(regional_latent_rep[r, 101]), 
+      date_rep[101], date_rep[102:118], theta_r[2, r]
+    );
+    regional_latent_rep[r, 119:121] = ode_rk45(
+      ode, to_vector(regional_latent_rep[r, 118]), 
+      date_rep[118], date_rep[119:121], theta_r[3, r]
     );
   }
 }

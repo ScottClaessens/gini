@@ -2,27 +2,27 @@
 #'
 #' @param data Tibble of raw data
 #' @param fit_draws_model Tibble of posterior draws from the model
+#' @param variable Variable to predict
 #'
 #' @returns A ggplot object
 #'
-plot_regional_predictions <- function(data, fit_draws_model) {
+plot_regional_predictions <- function(data, fit_draws_model, 
+                                      variable = "pop_size") {
   
   out <-
     fit_draws_model |>
     dplyr::select(starts_with("regional_latent_rep")) |>
     pivot_longer(
       cols = everything(),
-      names_to = c("region", "date", "variable"),
+      names_to = c("region", "date", "var"),
       names_pattern = paste0("regional_latent_rep\\[(.*),(.*),(.*)]")
     ) |>
     mutate(
       region = levels(factor(data$subregion))[as.numeric(region)],
-      date = seq(
-        min(data$date), max(data$date), length.out = 100
-      )[as.numeric(date)],
-      variable = c("pop_size", "cropland")[as.numeric(variable)]
+      date   = seq(-10000, 2000, length.out = 121)[as.numeric(date)],
+      var    = c("pop_size", "cropland")[as.numeric(var)]
     ) |>
-    group_by(region, date, variable) |>
+    group_by(region, date, var) |>
     summarise(
       median = median(value),
       lower = quantile(value, 0.025),
@@ -30,11 +30,15 @@ plot_regional_predictions <- function(data, fit_draws_model) {
       .groups = "drop"
     ) |>
     mutate(time_before_present = date - 2026) |>
-    filter(variable == "cropland") |>
+    filter(var == variable) |>
     
     ggplot() +
     geom_point(
-      data = mutate(data, region = subregion, value = log(cropland + 0.001)),
+      data = mutate(
+        data,
+        region = subregion,
+        value = log(!!sym(variable) + 0.001)
+      ),
       aes(
         x = (date - 2026) / 1000,
         y = value
@@ -63,7 +67,11 @@ plot_regional_predictions <- function(data, fit_draws_model) {
       breaks = c(-10, -5, 0)
     ) +
     scale_y_continuous(
-      name = "Cropland (log)"
+      name = ifelse(
+        variable == "pop_size",
+        "Population size (log)",
+        "Cropland (log)"
+      )
     ) +
     theme_classic() +
     theme(strip.text = element_text(size = 6))
@@ -74,7 +82,7 @@ plot_regional_predictions <- function(data, fit_draws_model) {
   # save
   ggsave(
     plot = out,
-    filename = "plots/regional_predictions.pdf",
+    filename = paste0("plots/regional_predictions_", variable, ".pdf"),
     height = 8,
     width = 8
   )

@@ -1,6 +1,8 @@
+options(tidyverse.quiet = TRUE)
 library(stantargets)
 library(targets)
 library(tarchetypes)
+library(tidyverse)
 
 tar_option_set(
   packages = c("bayesplot", "cmdstanr", "patchwork", "tidybayes", "tidyverse")
@@ -34,12 +36,15 @@ list(
   # ─────────────────────────────────────────
   
   tar_target(
-    plot_pred_regional,
-    plot_regional_predictions(data, fit_draws_model)
-  ),
-  tar_target(
     plot_pp_check,
     plot_predictive_check(data, fit_draws_model)
+  ),
+  tar_map(
+    values = tibble(variable = c("pop_size", "cropland")),
+    tar_target(
+      plot_pred_regional,
+      plot_regional_predictions(data, fit_draws_model, variable)
+    )
   )
 
 )

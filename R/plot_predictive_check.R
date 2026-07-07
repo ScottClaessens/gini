@@ -15,13 +15,32 @@ plot_predictive_check <- function(data, fit_draws_model) {
     as.matrix()
   
   # plot for pop size
-  out <- 
+  pA <- 
     bayesplot::ppc_dens_overlay(y, yrep[1:50, ]) +
     scale_x_continuous(
       name = "Population size (log scale)",
       transform = "log",
       breaks = c(1e-02, 1e+01, 1e+04)
     )
+  
+  # y and yrep for cropland
+  y <- data$cropland[!is.na(data$cropland)] + 0.001
+  yrep <-
+    fit_draws_model |>
+    dplyr::select(starts_with("cropland_rep")) |>
+    as.matrix()
+  
+  # plot for pop size
+  pB <- 
+    bayesplot::ppc_dens_overlay(y, yrep[1:50, ]) +
+    scale_x_continuous(
+      name = "Cropland (log scale)",
+      transform = "log",
+      breaks = c(1e-02, 1e+01, 1e+04)
+    )
+  
+  # put together
+  out <- pA + pB
   
   # cleanup
   rm(data, fit_draws_model)
@@ -30,8 +49,8 @@ plot_predictive_check <- function(data, fit_draws_model) {
   ggsave(
     plot = out,
     filename = "plots/pp_check.pdf",
-    height = 4,
-    width = 4
+    height = 3.5,
+    width = 7
   )
   
   # return
