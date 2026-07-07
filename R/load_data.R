@@ -68,6 +68,9 @@ load_data <- function(file_gini, file_hyde) {
     ) |>
     # retain only records after 10,000 BC
     filter(date >= -10000) |>
+    # remove Rapa Nui as there is no HYDE data
+    filter(subregion != "Polynesia Rapa Nui") |>
+    # arrange dataset
     arrange(subregion, date)
   
 }
