@@ -20,7 +20,7 @@ plot_regional_predictions <- function(data, fit_draws_model) {
       date = seq(
         min(data$date), max(data$date), length.out = 100
       )[as.numeric(date)],
-      variable = "pop_size"
+      variable = c("pop_size", "cropland")[as.numeric(variable)]
     ) |>
     group_by(region, date, variable) |>
     summarise(
@@ -30,16 +30,17 @@ plot_regional_predictions <- function(data, fit_draws_model) {
       .groups = "drop"
     ) |>
     mutate(time_before_present = date - 2026) |>
+    filter(variable == "cropland") |>
     
     ggplot() +
     geom_point(
-      data = mutate(data, region = subregion, value = log(pop_size + 0.001)),
+      data = mutate(data, region = subregion, value = log(cropland + 0.001)),
       aes(
         x = (date - 2026) / 1000,
         y = value
       ),
       size = 0.05,
-      colour = "lightgrey"
+      colour = "black"
     ) +
     geom_ribbon(
       aes(
@@ -62,10 +63,10 @@ plot_regional_predictions <- function(data, fit_draws_model) {
       breaks = c(-10, -5, 0)
     ) +
     scale_y_continuous(
-      name = "Population size (log)"
+      name = "Cropland (log)"
     ) +
     theme_classic() +
-    theme(strip.text = element_text(size = 4))
+    theme(strip.text = element_text(size = 6))
   
   # cleanup
   rm(data, fit_draws_model)
