@@ -3,11 +3,15 @@
 #' @param data Tibble of raw data
 #' @param fit_draws_model Tibble of posterior draws from the model
 #' @param variable Variable to predict
+#' @param pred_transform Function to transform model predictions
+#' @param data_transform Function to transform raw data
 #'
 #' @returns A ggplot object
 #'
 plot_regional_predictions <- function(data, fit_draws_model, 
-                                      variable = "pop_size") {
+                                      variable = "pop_size",
+                                      pred_transform = function(x) log(x + 1),
+                                      data_transform = function(x) log(x + 1)) {
   
   out <-
     fit_draws_model |>
@@ -22,7 +26,7 @@ plot_regional_predictions <- function(data, fit_draws_model,
       region = levels(factor(data$subregion))[as.numeric(region)],
       date   = seq(-10000, 2000, length.out = 121)[as.numeric(date)],
       var    = c("logit_pop", "raw_pop", 
-                 "logit_crop", "raw_crop")[as.numeric(var)]
+                 "logit_crop", "raw_crop", "gini")[as.numeric(var)]
     ) |>
     pivot_wider(
       names_from = "var",
@@ -34,18 +38,19 @@ plot_regional_predictions <- function(data, fit_draws_model,
       ),
       cropland = ifelse(
         rbinom(n(), 1, plogis(logit_crop)) == 0, 0, exp(raw_crop)
-      )
+      ),
+      gini = plogis(gini)
     ) |>
-    dplyr::select(c(region, date, pop_size, cropland)) |>
+    dplyr::select(c(region, date, pop_size, cropland, gini)) |>
     pivot_longer(
-      cols = c(pop_size, cropland),
+      cols = c(pop_size, cropland, gini),
       names_to = "var"
     ) |>
     group_by(region, date, var) |>
     summarise(
-      median = median(log(value + 1)),
-      lower = quantile(log(value + 1), 0.025),
-      upper = quantile(log(value + 1), 0.975),
+      median = median(pred_transform(value)),
+      lower = quantile(pred_transform(value), 0.025),
+      upper = quantile(pred_transform(value), 0.975),
       .groups = "drop"
     ) |>
     mutate(time_before_present = date - 2026) |>
@@ -56,7 +61,7 @@ plot_regional_predictions <- function(data, fit_draws_model,
       data = mutate(
         data,
         region = subregion,
-        value = log(!!sym(variable) + 1)
+        value = data_transform(!!sym(variable))
       ),
       aes(
         x = (date - 2026) / 1000,
@@ -86,10 +91,10 @@ plot_regional_predictions <- function(data, fit_draws_model,
       breaks = c(-10, -5, 0)
     ) +
     scale_y_continuous(
-      name = ifelse(
-        variable == "pop_size",
-        "Population size (log + 1)",
-        "Cropland (log + 1)"
+      name = case_when(
+        variable == "pop_size" ~ "Population size (log + 1)",
+        variable == "cropland" ~ "Cropland (log + 1)",
+        variable == "gini" ~ "Gini"
       )
     ) +
     theme_classic() +

@@ -40,7 +40,7 @@ list(
     plot_predictive_check(data, fit_draws_model)
   ),
   tar_map(
-    values = tibble(variable = c("pop_size", "cropland")),
+    values = tibble(variable = c("pop_size", "cropland", "gini")),
     tar_target(
       plot_pred_regional,
       plot_regional_predictions(data, fit_draws_model, variable)

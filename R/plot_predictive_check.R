@@ -39,8 +39,25 @@ plot_predictive_check <- function(data, fit_draws_model) {
       breaks = c(0, 1, 2, 5, 10, 20, 40, 80)
     )
   
+  # y and yrep for gini
+  y <- data$gini[!is.na(data$gini)]
+  yrep <-
+    fit_draws_model |>
+    dplyr::select(starts_with("gini_rep")) |>
+    as.matrix()
+  
+  # plot for gini
+  pC <- 
+    bayesplot::ppc_dens_overlay(y, yrep[1:50, ]) +
+    scale_x_continuous(
+      name = "Gini",
+      breaks = c(0.25, 0.5, 0.75)
+    )
+  
   # put together
-  out <- pA + pB
+  out <- 
+    pA + pB + pC +
+    plot_layout(guides = "collect")
   
   # cleanup
   rm(data, fit_draws_model)
@@ -49,7 +66,7 @@ plot_predictive_check <- function(data, fit_draws_model) {
   ggsave(
     plot = out,
     filename = "plots/pp_check.pdf",
-    height = 3.5,
+    height = 3,
     width = 7
   )
   

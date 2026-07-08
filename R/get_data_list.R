@@ -11,14 +11,17 @@ get_data_list <- function(data) {
     N_regions  = length(unique(data$subregion)),
     N_obs_pop  = sum(!is.na(data$pop_size)),
     N_obs_crop = sum(!is.na(data$cropland)),
+    N_obs_gini = sum(!is.na(data$gini)),
     date       = sort(unique(data$date)) / 100,
     i0         = which(sort(unique(data$date)) == 0),
     i1600      = which(sort(unique(data$date)) == 1600),
     region     = as.numeric(factor(data$subregion)),
     pop_size   = data$pop_size[!is.na(data$pop_size)],
     cropland   = data$cropland[!is.na(data$cropland)],
+    gini       = data$gini[!is.na(data$gini)],
     date_idx   = sapply(data$date, \(x) which(x == sort(unique(data$date)))),
     pop_idx    = which(!is.na(data$pop_size)),
-    crop_idx   = which(!is.na(data$cropland))
+    crop_idx   = which(!is.na(data$cropland)),
+    gini_idx   = which(!is.na(data$gini))
   )
 }

@@ -3,10 +3,11 @@ functions {
              vector state,   // states
              vector theta) { // parameters
     // states
-    real logitP = state[1]; // inv_logit(prob(pop_size > 0))
+    real logitP = state[1]; // logit( Pr(pop_size > 0) )
     real logP   = state[2]; // log(pop_size)
-    real logitC = state[3]; // inv_logit(prob(cropland > 0))
+    real logitC = state[3]; // logit( Pr(cropland > 0) )
     real logC   = state[4]; // log(cropland)
+    real logitG = state[5]; // logit(gini)
     // parameters
     real bP = exp(theta[1]); // increase in probability of positive population
     real rP = exp(theta[2]); // rate of population growth
@@ -17,7 +18,8 @@ functions {
     real dlogP   = rP;                    // dP/dt      = rP * P
     real dlogitC = bC;                    // dlogitC/dt = bC
     real dlogC   = rC * exp(logP - logC); // dC/dt      = rC * P
-    return to_vector({dlogitP, dlogP, dlogitC, dlogC});
+    real dlogitG = 0;                     // dlogitG/dt = 0
+    return to_vector({dlogitP, dlogP, dlogitC, dlogC, dlogitG});
   }
 }
 data {
@@ -26,26 +28,31 @@ data {
   int<lower=1, upper=N> N_regions;               // number of unique regions
   int<lower=1, upper=N> N_obs_pop;               // number of observed pop_size
   int<lower=1, upper=N> N_obs_crop;              // number of observed cropland
+  int<lower=1, upper=N> N_obs_gini;              // number of observed gini
   array[N_dates] real date;                      // dates (in millenia)
   int i0;                                        // index for 0 CE
   int i1600;                                     // index for 1600 CE
   array[N] int<lower=1, upper=N_regions> region; // region ids
   array[N_obs_pop] real<lower=0> pop_size;       // population size
-  array[N_obs_crop] real<lower=0> cropland;      // population size
+  array[N_obs_crop] real<lower=0> cropland;      // cropland
+  array[N_obs_gini] real<lower=0, upper=1> gini; // gini
   array[N] int date_idx;                         // link records to dates
   array[N_obs_pop] int pop_idx;                  // link pop_size to records
   array[N_obs_crop] int crop_idx;                // link cropland to records
+  array[N_obs_gini] int gini_idx;                // link gini to records
 }
 parameters {
   real init_logit_pop;           // initial state: logit prob of population > 0
   real init_pop_size;            // initial state: population size (log)
   real init_logit_crop;          // initial state: logit prob of cropland > 0
   real init_cropland;            // initial state: cropland (log)
+  real init_gini;                // initial state: gini (logit)
   array[3] vector[4] theta;      // ode parameters over three time periods
-  array[16] real<lower=0> tau;   // region SDs
-  array[16] vector[N_regions] z; // region-specific effects
+  array[17] real<lower=0> tau;   // region SDs
+  array[17] vector[N_regions] z; // region-specific effects
   real<lower=0> sigma;           // lognormal variance for population size
   real<lower=0> omega;           // lognormal variance for cropland
+  real<lower=0> phi;             // beta precision for gini
 }
 transformed parameters{
   // construct region-specific effects
@@ -53,24 +60,26 @@ transformed parameters{
   vector[N_regions] init_pop_size_r   = init_pop_size   + (tau[2] * z[2]);
   vector[N_regions] init_logit_crop_r = init_logit_crop + (tau[3] * z[3]);
   vector[N_regions] init_cropland_r   = init_cropland   + (tau[4] * z[4]);
+  vector[N_regions] init_gini_r       = init_gini       + (tau[5] * z[5]);
   array[3, N_regions] vector[4] theta_r;
   for (p in 1:3) {
     for (r in 1:N_regions) {
       for (k in 1:4) {
-        int i = 4 + (p - 1) * 4 + k;
+        int i = 5 + (p - 1) * 4 + k;
         theta_r[p, r][k] = theta[p][k] + (tau[i] * z[i][r]);
       }
     }
   }
   
   // solve ode
-  array[N_regions, N_dates] vector[4] latent;
+  array[N_regions, N_dates] vector[5] latent;
   for (r in 1:N_regions) {
     // initial values
     latent[r, 1][1] = init_logit_pop_r[r];
     latent[r, 1][2] = init_pop_size_r[r];
     latent[r, 1][3] = init_logit_crop_r[r];
     latent[r, 1][4] = init_cropland_r[r];
+    latent[r, 1][5] = init_gini_r[r];
     // first period = 10,000 BCE to 0 CE
     latent[r, 2:i0] = ode_rk45(
       ode, latent[r, 1], date[1], date[2:i0], theta_r[1, r]
@@ -91,11 +100,13 @@ model {
   init_pop_size ~ normal(-1, 1);
   init_logit_crop ~ normal(-4, 1);
   init_cropland ~ normal(-1, 1);
+  init_gini ~ normal(-1, 1);
   for (p in 1:3) theta[p] ~ normal(-2, 0.5);
-  for (i in 1:16) z[i] ~ normal(0, 1);
+  for (i in 1:17) z[i] ~ normal(0, 1);
   tau ~ exponential(1);
   sigma ~ exponential(1);
   omega ~ exponential(1);
+  phi ~ exponential(1);
   
   // likelihood for population size
   for (i in 1:N_obs_pop) {
@@ -120,13 +131,20 @@ model {
       target += lognormal_lpdf(cropland[i] | nu, omega);
     }
   }
+  
+  // likelihood for gini
+  for (i in 1:N_obs_gini) {
+    real mu = latent[region[gini_idx[i]], date_idx[gini_idx[i]]][5];
+    target += beta_proportion_lpdf(gini[i] | inv_logit(mu), phi);
+  }
 }
 generated quantities {
   array[N_obs_pop] real pop_size_rep;
   array[N_obs_crop] real cropland_rep;
+  array[N_obs_gini] real gini_rep;
   array[121] real date_rep = linspaced_array(121, -100, 20);
-  array[121] vector[4] global_latent_rep;
-  array[N_regions, 121] vector[4] regional_latent_rep;
+  array[121] vector[5] global_latent_rep;
+  array[N_regions, 121] vector[5] regional_latent_rep;
   
   // posterior predictive check for population size
   for (i in 1:N_obs_pop) {
@@ -150,11 +168,18 @@ generated quantities {
     }
   }
   
+  // posterior predictive check for gini
+  for (i in 1:N_obs_gini) {
+    real mu = latent[region[gini_idx[i]], date_idx[gini_idx[i]]][5];
+    gini_rep[i] = beta_proportion_rng(inv_logit(mu), phi);
+  }
+  
   // global ode prediction across three periods
   global_latent_rep[1][1] = init_logit_pop;
   global_latent_rep[1][2] = init_pop_size;
   global_latent_rep[1][3] = init_logit_crop;
   global_latent_rep[1][4] = init_cropland;
+  global_latent_rep[1][5] = init_gini;
   global_latent_rep[2:101] = ode_rk45(
     ode, global_latent_rep[1], date_rep[1], date_rep[2:101], theta[1]
   );
@@ -171,6 +196,7 @@ generated quantities {
     regional_latent_rep[r, 1][2] = init_pop_size_r[r];
     regional_latent_rep[r, 1][3] = init_logit_crop_r[r];
     regional_latent_rep[r, 1][4] = init_cropland_r[r];
+    regional_latent_rep[r, 1][5] = init_gini_r[r];
     regional_latent_rep[r, 2:101] = ode_rk45(
       ode, regional_latent_rep[r, 1], 
       date_rep[1], date_rep[2:101], theta_r[1, r]
