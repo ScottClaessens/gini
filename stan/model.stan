@@ -40,6 +40,7 @@ data {
   array[N_obs_pop] int pop_idx;                  // link pop_size to records
   array[N_obs_crop] int crop_idx;                // link cropland to records
   array[N_obs_gini] int gini_idx;                // link gini to records
+  array[N_regions] vector[3] coords;             // x,y,z region coordinates
 }
 parameters {
   real init_logit_pop;           // initial state: logit prob of population > 0
@@ -50,17 +51,26 @@ parameters {
   array[3] vector[4] theta;      // ode parameters over three time periods
   array[17] real<lower=0> tau;   // region SDs
   array[17] vector[N_regions] z; // region-specific effects
+  real<lower=0> lscale;          // length-scale for spatial GP
   real<lower=0> sigma;           // lognormal variance for population size
   real<lower=0> omega;           // lognormal variance for cropland
   real<lower=0> phi;             // beta precision for gini
 }
 transformed parameters{
-  // construct region-specific effects
+  // construct region-specific initial values for pop_size and cropland
   vector[N_regions] init_logit_pop_r  = init_logit_pop  + (tau[1] * z[1]);
   vector[N_regions] init_pop_size_r   = init_pop_size   + (tau[2] * z[2]);
   vector[N_regions] init_logit_crop_r = init_logit_crop + (tau[3] * z[3]);
   vector[N_regions] init_cropland_r   = init_cropland   + (tau[4] * z[4]);
-  vector[N_regions] init_gini_r       = init_gini       + (tau[5] * z[5]);
+  
+  // construct region-specific initial values for gini
+  matrix[N_regions, N_regions] L = cholesky_decompose(
+    gp_exp_quad_cov(coords, tau[5], lscale) + 
+    diag_matrix(rep_vector(1e-8, N_regions)) // ensure positive definite
+  );
+  vector[N_regions] init_gini_r = init_gini + (L * z[5]);
+  
+  // construct region-specific ode parameters
   array[3, N_regions] vector[4] theta_r;
   for (p in 1:3) {
     for (r in 1:N_regions) {
@@ -104,6 +114,7 @@ model {
   for (p in 1:3) theta[p] ~ normal(-2, 0.5);
   for (i in 1:17) z[i] ~ normal(0, 1);
   tau ~ exponential(1);
+  lscale ~ exponential(1);
   sigma ~ exponential(1);
   omega ~ exponential(1);
   phi ~ exponential(1);
