@@ -8,7 +8,7 @@
 plot_predictive_check <- function(data, fit_draws_model) {
   
   # y and yrep for pop size
-  y <- data$pop_size[!is.na(data$pop_size)] + 0.001
+  y <- data$pop_size[!is.na(data$pop_size)]
   yrep <-
     fit_draws_model |>
     dplyr::select(starts_with("pop_size_rep")) |>
@@ -18,13 +18,13 @@ plot_predictive_check <- function(data, fit_draws_model) {
   pA <- 
     bayesplot::ppc_dens_overlay(y, yrep[1:50, ]) +
     scale_x_continuous(
-      name = "Population size (log scale)",
-      transform = "log",
-      breaks = c(1e-02, 1e+01, 1e+04)
+      name = "Population size (log + 1)",
+      transform = "log1p",
+      breaks = c(0, 10, 100, 1000, 10000)
     )
   
   # y and yrep for cropland
-  y <- data$cropland[!is.na(data$cropland)] + 0.001
+  y <- data$cropland[!is.na(data$cropland)]
   yrep <-
     fit_draws_model |>
     dplyr::select(starts_with("cropland_rep")) |>
@@ -34,9 +34,9 @@ plot_predictive_check <- function(data, fit_draws_model) {
   pB <- 
     bayesplot::ppc_dens_overlay(y, yrep[1:50, ]) +
     scale_x_continuous(
-      name = "Cropland (log scale)",
-      transform = "log",
-      breaks = c(1e-02, 1e+01, 1e+04)
+      name = "Cropland (log + 1)",
+      transform = "log1p",
+      breaks = c(0, 1, 2, 5, 10, 20, 40, 80)
     )
   
   # put together

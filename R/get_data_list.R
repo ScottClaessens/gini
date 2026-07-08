@@ -15,8 +15,8 @@ get_data_list <- function(data) {
     i0         = which(sort(unique(data$date)) == 0),
     i1600      = which(sort(unique(data$date)) == 1600),
     region     = as.numeric(factor(data$subregion)),
-    pop_size   = data$pop_size[!is.na(data$pop_size)] + 0.001, # positive real
-    cropland   = data$cropland[!is.na(data$cropland)] + 0.001, # positive real
+    pop_size   = data$pop_size[!is.na(data$pop_size)],
+    cropland   = data$cropland[!is.na(data$cropland)],
     date_idx   = sapply(data$date, \(x) which(x == sort(unique(data$date)))),
     pop_idx    = which(!is.na(data$pop_size)),
     crop_idx   = which(!is.na(data$cropland))
