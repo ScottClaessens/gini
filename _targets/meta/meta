@@ -3,16 +3,20 @@ file_gini|stem|55a6666557c52dc2|f68edb0f308568cc|2c530c1562a7fbd1|1176102249|dat
 file_hyde|stem|49ce48d47f1581ae|9ef94c91729879a2|2c530c1562a7fbd1|1001141386|data/hyde/hyde.csv|t20632.4010897603s|s2328875b|2328875|file|local|vector|||1.658||
 data|stem|cdb8dfb6173371e7|e668cf0f8d2153b6|c2eabc04ac580af7|33550471||t20648.5613256068s|s80968b|80968|rds|local|vector|||0.237||
 fit_data|stem|e739f4a3f814e5e6|5651e3259231c142|63152551f5aaaa6a|2045157859||t20648.5614960005s|s102551b|102551|qs|local|vector|||0.678||
-fit_file_model|stem|b2d9c3657f485cc9|54a560e19a79606d|2c530c1562a7fbd1|1720039687|stan/model.stan|t20648.5575430825s|s12074b|12074|file|local|vector|||0.001||
 fit_mcmc_model|stem|597e3284241880e3|84bae59bb4f564f8|e49eff80e3011085|-1258408334||t20649.3697020359s|s3852478811b|3852478811|qs|local|vector|||37793.28||
 fit_diagnostics_model|stem|b5fd1f1279c27281|99c0b3ae17211f24|3f8d3368e5721184|1035351838||t20649.3697405062s|s37729b|37729|fst_tbl|local|vector|||0.022||
 fit_draws_model|stem|452b56d94d2550e9|c2057211be62d528|3f8d3368e5721184|825927751||t20649.3700942212s|s4644799587b|4644799587|fst_tbl|local|vector|||10.272||
-plot_predictive_check|function|89584537e491151d
-plot_regional_predictions|function|5102e752cf1a9bd3
-load_data|function|bf42c966efc4106e
-get_data_list|function|127ad82d201971d2
 fit_summary_model|stem|f57bce1cc3720657|76a50aa46cf0de81|14e2319242d0eb8c|1412698824||t20650.3799167763s|s22982533b|22982533|fst_tbl|local|vector|||874.961|The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.|
 plot_pred_regional_gini|stem|41c934a216d5d666|74236aa74bd31501|096db97d8c5a7f05|-1422095038||t20650.3803798144s|s1577691b|1577691|rds|local|vector|||36.087|Removed 7138 rows containing missing values or values outside the scale range (`geom_point()`).|
 plot_pred_regional_pop_size|stem|6e4111671da52e46|31113d7dc24b792f|096db97d8c5a7f05|488685914||t20650.3808571603s|s1745219b|1745219|rds|local|vector|||36.03|Removed 1165 rows containing missing values or values outside the scale range (`geom_point()`).|
 plot_pred_regional_cropland|stem|aed5038e0aa448dd|09f81494a1860b2c|096db97d8c5a7f05|-1260229565||t20650.3813312196s|s1265941b|1265941|rds|local|vector|||34.648|Removed 1165 rows containing missing values or values outside the scale range (`geom_point()`).|
 plot_pp_check|stem|7380eadadc99d014|1d6a2441d2ec9340|69449072e1dcf350|1602978789||t20650.3814499192s|s20224011b|20224011|rds|local|vector|||4.045||
+fit_file_model|stem|b2d9c3657f485cc9|54a560e19a79606d|2c530c1562a7fbd1|1720039687|stan/model.stan|t20650.4162068963s|s12074b|12074|file|local|vector|||0.001||
+plot_rates|stem|b9021aca40a5bc76|53251515748c63ea|aabe09f5da1c8e4e|-1943185017||t20650.4471430722s|s4117106241b|4117106241|rds|local|vector|||1.63||
+plot_predictive_check|function|89584537e491151d
+plot_regional_predictions|function|5102e752cf1a9bd3
+load_data|function|bf42c966efc4106e
+plot_rates_pop_crop|function|050f3ae13d1c0ee6
+plot_gini_change|function|d1a275a33f08d788
+get_data_list|function|127ad82d201971d2
+plot_delta_gini|stem|b932af05e8b9e9a0|6c34b8686c7036fe|5213314f4a247036|-1498721681||t20650.5042811997s|s4129463888b|4129463888|rds|local|vector|||0.524||

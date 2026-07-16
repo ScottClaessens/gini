@@ -11,17 +11,17 @@ tar_source()
 
 list(
   
-  # ─────────────────────────────────────────
+  # ────────────────────────────────────────────
   # Load data
-  # ─────────────────────────────────────────
+  # ────────────────────────────────────────────
   
   tar_target(file_gini, "data/gini/SiteGiniLevel.csv", format = "file"),
   tar_target(file_hyde, "data/hyde/hyde.csv", format = "file"),
   tar_target(data, load_data(file_gini, file_hyde)),
   
-  # ─────────────────────────────────────────
+  # ────────────────────────────────────────────
   # Fit Stan model
-  # ─────────────────────────────────────────
+  # ────────────────────────────────────────────
   
   tar_stan_mcmc(
     fit,
@@ -33,9 +33,9 @@ list(
     seed = 1
   ),
   
-  # ─────────────────────────────────────────
-  # Plot model predictions and checks
-  # ─────────────────────────────────────────
+  # ────────────────────────────────────────────
+  # Plot model results, predictions, and checks
+  # ────────────────────────────────────────────
   
   tar_target(
     plot_pp_check,
@@ -47,6 +47,8 @@ list(
       plot_pred_regional,
       plot_regional_predictions(data, fit_draws_model, variable)
     )
-  )
+  ),
+  tar_target(plot_delta_gini, plot_gini_change(fit_draws_model)),
+  tar_target(plot_rates, plot_rates_pop_crop(fit_draws_model))
 
 )
