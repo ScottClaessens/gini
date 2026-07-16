@@ -33,12 +33,8 @@ plot_regional_predictions <- function(data, fit_draws_model,
       values_from = "value"
     ) |>
     mutate(
-      pop_size = ifelse(
-        rbinom(n(), 1, plogis(logit_pop)) == 0, 0, exp(raw_pop)
-      ),
-      cropland = ifelse(
-        rbinom(n(), 1, plogis(logit_crop)) == 0, 0, exp(raw_crop)
-      ),
+      pop_size = plogis(logit_pop) * exp(raw_pop),
+      cropland = plogis(logit_crop) * exp(raw_crop),
       gini = plogis(gini)
     ) |>
     dplyr::select(c(region, date, pop_size, cropland, gini)) |>
