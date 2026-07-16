@@ -37,10 +37,8 @@ list(
   # Plot model results, predictions, and checks
   # ────────────────────────────────────────────
   
-  tar_target(
-    plot_pp_check,
-    plot_predictive_check(data, fit_draws_model)
-  ),
+  tar_target(plot_pp_check, plot_predictive_check(data, fit_draws_model)),
+  tar_target(plot_pred_global, plot_global_trajectories(fit_draws_model)),
   tar_map(
     values = tibble(variable = c("pop_size", "cropland", "gini")),
     tar_target(
