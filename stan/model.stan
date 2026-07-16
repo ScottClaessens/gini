@@ -1,24 +1,45 @@
 functions {
+  // construct cholesky for gaussian process
+  matrix construct_gp_cholesky(array[] vector coords,
+                               real tau,
+                               real lscale) {
+    int N = dims(coords)[1];
+    matrix[N, N] K = gp_exp_quad_cov(coords, tau, lscale);
+    matrix[N, N] L = cholesky_decompose(K + diag_matrix(rep_vector(1e-8, N)));
+    return(L);
+  }
+  
+  // ode function
   vector ode(real date,      // date
              vector state,   // states
              vector theta) { // parameters
     // states
-    real logitP = state[1]; // logit( Pr(pop_size > 0) )
-    real logP   = state[2]; // log(pop_size)
-    real logitC = state[3]; // logit( Pr(cropland > 0) )
-    real logC   = state[4]; // log(cropland)
-    real logitG = state[5]; // logit(gini)
+    real logitP = state[1];     // logit( Pr(pop_size > 0) )
+    real logP   = state[2];     // log(pop_size)
+    real logitC = state[3];     // logit( Pr(cropland > 0) )
+    real logC   = state[4];     // log(cropland)
+    real logitG = state[5];     // logit(gini)
     // parameters
-    real bP = exp(theta[1]); // increase in probability of positive population
-    real rP = exp(theta[2]); // rate of population growth
-    real bC = exp(theta[3]); // increase in probability of positive cropland
-    real rC = exp(theta[4]); // rate of cropland production
+    real bP = exp(theta[1]);    // increase in probability of population > 0
+    real rP = exp(theta[2]);    // rate of population growth
+    real bC = exp(theta[3]);    // increase in probability of cropland > 0
+    real rC = exp(theta[4]);    // rate of cropland production
+    real alpha = theta[5];      // continuous-time intercept for gini
+    real betaP = theta[6];      // effect of population size on gini
+    real betaC = theta[7];      // effect of cropland on gini
+    real gamma = exp(theta[8]); // damping parameter
+    // transformed parameters
+    real rG =
+      alpha
+      + betaP * (inv_logit(logitP) * log1p_exp(logP))
+      + betaC * (inv_logit(logitC) * log1p_exp(logC))
+      - gamma * logitG;
     // differential equations
     real dlogitP = bP;                    // dlogitP/dt = bP
     real dlogP   = rP;                    // dP/dt      = rP * P
     real dlogitC = bC;                    // dlogitC/dt = bC
     real dlogC   = rC * exp(logP - logC); // dC/dt      = rC * P
-    real dlogitG = 0;                     // dlogitG/dt = 0
+    real dlogitG = rG;                    // dlogitG/dt = rG
     return to_vector({dlogitP, dlogP, dlogitC, dlogC, dlogitG});
   }
 }
@@ -48,37 +69,58 @@ parameters {
   real init_logit_crop;          // initial state: logit prob of cropland > 0
   real init_cropland;            // initial state: cropland (log)
   real init_gini;                // initial state: gini (logit)
-  array[3] vector[4] theta;      // ode parameters over three time periods
-  array[17] real<lower=0> tau;   // region SDs
-  array[17] vector[N_regions] z; // region-specific effects
-  real<lower=0> lscale;          // length-scale for spatial GP
+  array[3] vector[8] theta;      // ode parameters over three time periods
+  array[18] real<lower=0> tau;   // region SDs
+  array[18] vector[N_regions] z; // region-specific effects
+  array[2] real<lower=0> lscale; // length-scale for spatial GPs
   real<lower=0> sigma;           // lognormal variance for population size
   real<lower=0> omega;           // lognormal variance for cropland
   real<lower=0> phi;             // beta precision for gini
 }
 transformed parameters{
-  // construct region-specific initial values for pop_size and cropland
+  // construct gp vectors
+  vector[N_regions] init_gini_gp; 
+  vector[N_regions] alpha_gp; 
+  init_gini_gp = construct_gp_cholesky(coords, tau[5], lscale[1]) * z[5];
+  alpha_gp = construct_gp_cholesky(coords, tau[10], lscale[2]) * z[10];
+  
+  // construct region-specific initial values
   vector[N_regions] init_logit_pop_r  = init_logit_pop  + (tau[1] * z[1]);
   vector[N_regions] init_pop_size_r   = init_pop_size   + (tau[2] * z[2]);
   vector[N_regions] init_logit_crop_r = init_logit_crop + (tau[3] * z[3]);
   vector[N_regions] init_cropland_r   = init_cropland   + (tau[4] * z[4]);
-  
-  // construct region-specific initial values for gini
-  matrix[N_regions, N_regions] L = cholesky_decompose(
-    gp_exp_quad_cov(coords, tau[5], lscale) + 
-    diag_matrix(rep_vector(1e-8, N_regions)) // ensure positive definite
-  );
-  vector[N_regions] init_gini_r = init_gini + (L * z[5]);
+  vector[N_regions] init_gini_r = init_gini + init_gini_gp;
   
   // construct region-specific ode parameters
-  array[3, N_regions] vector[4] theta_r;
-  for (p in 1:3) {
-    for (r in 1:N_regions) {
-      for (k in 1:4) {
-        int i = 5 + (p - 1) * 4 + k;
-        theta_r[p, r][k] = theta[p][k] + (tau[i] * z[i][r]);
-      }
-    }
+  array[3, N_regions] vector[8] theta_r;
+  for (r in 1:N_regions) {
+    // period 1
+    theta_r[1, r][1] = theta[1][1] + (tau[6] * z[6][r]);    // bP
+    theta_r[1, r][2] = theta[1][2] + (tau[7] * z[7][r]);    // rP
+    theta_r[1, r][3] = theta[1][3] + (tau[8] * z[8][r]);    // bC
+    theta_r[1, r][4] = theta[1][4] + (tau[9] * z[9][r]);    // rC
+    theta_r[1, r][5] = theta[1][5] + alpha_gp[r];           // alpha (constant)
+    theta_r[1, r][6] = theta[1][6];                         // betaP (constant)
+    theta_r[1, r][7] = theta[1][7];                         // betaC (constant)
+    theta_r[1, r][8] = theta[1][8];                         // gamma (constant)
+    // period 2
+    theta_r[2, r][1] = theta[2][1] + (tau[11] * z[11][r]);  // bP
+    theta_r[2, r][2] = theta[2][2] + (tau[12] * z[12][r]);  // rP
+    theta_r[2, r][3] = theta[2][3] + (tau[13] * z[13][r]);  // bC
+    theta_r[2, r][4] = theta[2][4] + (tau[14] * z[14][r]);  // rC
+    theta_r[2, r][5] = theta[1][5] + alpha_gp[r];           // alpha (constant)
+    theta_r[2, r][6] = theta[1][6];                         // betaP (constant)
+    theta_r[2, r][7] = theta[1][7];                         // betaC (constant)
+    theta_r[2, r][8] = theta[1][8];                         // gamma (constant)
+    // period 3
+    theta_r[3, r][1] = theta[3][1] + (tau[15] * z[15][r]);  // bP
+    theta_r[3, r][2] = theta[3][2] + (tau[16] * z[16][r]);  // rP
+    theta_r[3, r][3] = theta[3][3] + (tau[17] * z[17][r]);  // bC
+    theta_r[3, r][4] = theta[3][4] + (tau[18] * z[18][r]);  // rC
+    theta_r[3, r][5] = theta[1][5] + alpha_gp[r];           // alpha (constant)
+    theta_r[3, r][6] = theta[1][6];                         // betaP (constant)
+    theta_r[3, r][7] = theta[1][7];                         // betaC (constant)
+    theta_r[3, r][8] = theta[1][8];                         // gamma (constant)
   }
   
   // solve ode
@@ -105,19 +147,32 @@ transformed parameters{
   }
 }
 model {
-  // priors
-  init_logit_pop ~ normal(-4, 1);
-  init_pop_size ~ normal(-1, 1);
-  init_logit_crop ~ normal(-4, 1);
-  init_cropland ~ normal(-1, 1);
-  init_gini ~ normal(-1, 1);
-  for (p in 1:3) theta[p] ~ normal(-2, 0.5);
-  for (i in 1:17) z[i] ~ normal(0, 1);
-  tau ~ exponential(1);
-  lscale ~ exponential(1);
-  sigma ~ exponential(1);
-  omega ~ exponential(1);
-  phi ~ exponential(1);
+  // priors for initial states
+  init_logit_pop ~ normal(-4, 0.5);
+  init_pop_size ~ normal(-1, 0.5);
+  init_logit_crop ~ normal(-4, 0.5);
+  init_cropland ~ normal(-1, 0.5);
+  init_gini ~ normal(-1, 0.5);
+  
+  // priors for ode parameters
+  for (p in 1:3) {
+    theta[p][1] ~ normal(-2, 0.5); // bP
+    theta[p][2] ~ normal(-2, 0.5); // rP
+    theta[p][3] ~ normal(-2, 0.5); // bC
+    theta[p][4] ~ normal(-2, 0.5); // rC
+    theta[p][5] ~ normal(0, 0.5);  // alpha
+    theta[p][6] ~ normal(0, 0.5);  // betaP
+    theta[p][7] ~ normal(0, 0.5);  // betaC
+    theta[p][8] ~ normal(-2, 0.5); // gamma
+  }
+  
+  // priors for standardised varying effects, GP, and measurement error
+  for (i in 1:18) z[i] ~ normal(0, 1);
+  tau ~ exponential(2);
+  lscale ~ exponential(2);
+  sigma ~ exponential(2);
+  omega ~ exponential(2);
+  phi ~ exponential(2);
   
   // likelihood for population size
   for (i in 1:N_obs_pop) {
@@ -186,20 +241,20 @@ generated quantities {
   }
   
   // global ode prediction across three periods
-  global_latent_rep[1][1] = init_logit_pop;
-  global_latent_rep[1][2] = init_pop_size;
-  global_latent_rep[1][3] = init_logit_crop;
-  global_latent_rep[1][4] = init_cropland;
-  global_latent_rep[1][5] = init_gini;
-  global_latent_rep[2:101] = ode_rk45(
-    ode, global_latent_rep[1], date_rep[1], date_rep[2:101], theta[1]
-  );
-  global_latent_rep[102:117] = ode_rk45(
-    ode, global_latent_rep[101], date_rep[101], date_rep[102:117], theta[2]
-  );
-  global_latent_rep[118:121] = ode_rk45(
-    ode, global_latent_rep[117], date_rep[117], date_rep[118:121], theta[3]
-  );
+  //global_latent_rep[1][1] = init_logit_pop;
+  //global_latent_rep[1][2] = init_pop_size;
+  //global_latent_rep[1][3] = init_logit_crop;
+  //global_latent_rep[1][4] = init_cropland;
+  //global_latent_rep[1][5] = init_gini;
+  //global_latent_rep[2:101] = ode_rk45(
+  //  ode, global_latent_rep[1], date_rep[1], date_rep[2:101], theta[1]
+  //);
+  //global_latent_rep[102:117] = ode_rk45(
+  //  ode, global_latent_rep[101], date_rep[101], date_rep[102:117], theta[2]
+  //);
+  //global_latent_rep[118:121] = ode_rk45(
+  //  ode, global_latent_rep[117], date_rep[117], date_rep[118:121], theta[3]
+  //);
   
   // regional ode prediction across three periods
   for (r in 1:N_regions) {
