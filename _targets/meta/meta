@@ -14,6 +14,7 @@ plot_delta_gini|stem|b932af05e8b9e9a0|6c34b8686c7036fe|5213314f4a247036|-1498721
 plot_pred_regional_gini|stem|12728d7b2cbf2a9f|74236aa74bd31501|724742fe6155b562|-1422095038||t20650.5181544927s|s1577216b|1577216|rds|local|vector|||40.319|Removed 7138 rows containing missing values or values outside the scale range (`geom_point()`).|
 plot_pred_regional_pop_size|stem|a796a77e0e00c1dc|31113d7dc24b792f|724742fe6155b562|488685914||t20650.5186640489s|s1773874b|1773874|rds|local|vector|||38.868|Removed 1165 rows containing missing values or values outside the scale range (`geom_point()`).|
 plot_pred_regional_cropland|stem|742e60f4409b65da|09f81494a1860b2c|724742fe6155b562|-1260229565||t20650.5192133759s|s1685710b|1685710|rds|local|vector|||41.96|Removed 1165 rows containing missing values or values outside the scale range (`geom_point()`).|
+plot_pred_global|stem|ec28f58fdb1e9a74|0760c8c348868573|159cb34a3d93ff5a|-1061999205||t20654.3701668655s|s4117662874b|4117662874|rds|local|vector|||0.957||
 plot_predictive_check|function|89584537e491151d
 plot_regional_predictions|function|5d6542c2247e3d87
 simulate_ODE|function|f79d4038ee02def2
@@ -21,5 +22,4 @@ load_data|function|bf42c966efc4106e
 plot_rates_pop_crop|function|050f3ae13d1c0ee6
 plot_gini_change|function|d1a275a33f08d788
 get_data_list|function|127ad82d201971d2
-plot_global_trajectories|function|506e295375ca4a77
-plot_pred_global|stem|024f902a8f761f92|0760c8c348868573|f4e487c8d672a5b9|-1061999205||t20650.6380814272s|s8248258901b|8248258901|rds|local|vector|||0.961||
+plot_global_trajectories|function|3c73cdaad330c994

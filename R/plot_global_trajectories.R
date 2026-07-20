@@ -127,9 +127,9 @@ plot_global_trajectories <- function(fit_draws_model,
     tibble(
       variable = "Population size",
       time = c(times1, times2, times3),
-      median = apply(P, 2, function(x) median(x)),
-      lower  = apply(P, 2, function(x) quantile(x, 0.025)),
-      upper  = apply(P, 2, function(x) quantile(x, 0.975)),
+      median = apply(P, 2, function(x) median(log(x + 1))),
+      lower  = apply(P, 2, function(x) quantile(log(x + 1), 0.025)),
+      upper  = apply(P, 2, function(x) quantile(log(x + 1), 0.975)),
     ) |>
     ggplot(
       mapping = aes(
@@ -144,7 +144,7 @@ plot_global_trajectories <- function(fit_draws_model,
     ) +
     labs(
       x = "Time before present (ky)",
-      y = "Population size"
+      y = "Population size\n(log + 1)"
     ) +
     geom_line() +
     theme_classic()
@@ -154,9 +154,9 @@ plot_global_trajectories <- function(fit_draws_model,
     tibble(
       variable = "Cropland",
       time = c(times1, times2, times3),
-      median = apply(C, 2, function(x) median(x)),
-      lower  = apply(C, 2, function(x) quantile(x, 0.025)),
-      upper  = apply(C, 2, function(x) quantile(x, 0.975)),
+      median = apply(C, 2, function(x) median(log(x + 1))),
+      lower  = apply(C, 2, function(x) quantile(log(x + 1), 0.025)),
+      upper  = apply(C, 2, function(x) quantile(log(x + 1), 0.975)),
     ) |>
     ggplot(
       mapping = aes(
@@ -171,7 +171,7 @@ plot_global_trajectories <- function(fit_draws_model,
     ) +
     labs(
       x = "Time before present (ky)",
-      y = "Cropland"
+      y = "Cropland\n(log + 1)"
     ) +
     geom_line() +
     theme_classic()
@@ -216,6 +216,9 @@ plot_global_trajectories <- function(fit_draws_model,
     height = 4,
     width = 6
   )
+  
+  # cleanup
+  rm(fit_draws_model, out, P, C, G)
   
   # return
   p
