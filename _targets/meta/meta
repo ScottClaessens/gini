@@ -1,20 +1,8 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 file_gini|stem|55a6666557c52dc2|f68edb0f308568cc|2c530c1562a7fbd1|1176102249|data/gini/SiteGiniLevel.csv|t20490.6654210819s|s574550b|574550|file|local|vector|||1.78||
 file_hyde|stem|49ce48d47f1581ae|9ef94c91729879a2|2c530c1562a7fbd1|1001141386|data/hyde/hyde.csv|t20632.4010897603s|s2328875b|2328875|file|local|vector|||1.658||
-data|stem|cdb8dfb6173371e7|e668cf0f8d2153b6|c2eabc04ac580af7|33550471||t20648.5613256068s|s80968b|80968|rds|local|vector|||0.237||
-fit_data|stem|e739f4a3f814e5e6|5651e3259231c142|63152551f5aaaa6a|2045157859||t20648.5614960005s|s102551b|102551|qs|local|vector|||0.678||
-fit_mcmc_model|stem|597e3284241880e3|84bae59bb4f564f8|e49eff80e3011085|-1258408334||t20649.3697020359s|s3852478811b|3852478811|qs|local|vector|||37793.28||
-fit_diagnostics_model|stem|b5fd1f1279c27281|99c0b3ae17211f24|3f8d3368e5721184|1035351838||t20649.3697405062s|s37729b|37729|fst_tbl|local|vector|||0.022||
-fit_draws_model|stem|452b56d94d2550e9|c2057211be62d528|3f8d3368e5721184|825927751||t20649.3700942212s|s4644799587b|4644799587|fst_tbl|local|vector|||10.272||
-fit_summary_model|stem|f57bce1cc3720657|76a50aa46cf0de81|14e2319242d0eb8c|1412698824||t20650.3799167763s|s22982533b|22982533|fst_tbl|local|vector|||874.961|The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.|
-plot_pp_check|stem|7380eadadc99d014|1d6a2441d2ec9340|69449072e1dcf350|1602978789||t20650.3814499192s|s20224011b|20224011|rds|local|vector|||4.045||
-fit_file_model|stem|b2d9c3657f485cc9|54a560e19a79606d|2c530c1562a7fbd1|1720039687|stan/model.stan|t20650.4162068963s|s12074b|12074|file|local|vector|||0.001||
-plot_rates|stem|b9021aca40a5bc76|53251515748c63ea|aabe09f5da1c8e4e|-1943185017||t20650.4471430722s|s4117106241b|4117106241|rds|local|vector|||1.63||
-plot_delta_gini|stem|b932af05e8b9e9a0|6c34b8686c7036fe|5213314f4a247036|-1498721681||t20650.5042811997s|s4129463888b|4129463888|rds|local|vector|||0.524||
-plot_pred_regional_gini|stem|12728d7b2cbf2a9f|74236aa74bd31501|724742fe6155b562|-1422095038||t20650.5181544927s|s1577216b|1577216|rds|local|vector|||40.319|Removed 7138 rows containing missing values or values outside the scale range (`geom_point()`).|
-plot_pred_regional_pop_size|stem|a796a77e0e00c1dc|31113d7dc24b792f|724742fe6155b562|488685914||t20650.5186640489s|s1773874b|1773874|rds|local|vector|||38.868|Removed 1165 rows containing missing values or values outside the scale range (`geom_point()`).|
-plot_pred_regional_cropland|stem|742e60f4409b65da|09f81494a1860b2c|724742fe6155b562|-1260229565||t20650.5192133759s|s1685710b|1685710|rds|local|vector|||41.96|Removed 1165 rows containing missing values or values outside the scale range (`geom_point()`).|
-plot_pred_global|stem|ec28f58fdb1e9a74|0760c8c348868573|159cb34a3d93ff5a|-1061999205||t20654.3701668655s|s4117662874b|4117662874|rds|local|vector|||0.957||
+report|stem|a347fd33c9d597cf|b665e3fc56248932|2c530c1562a7fbd1|787668912|quarto/report.pdf*quarto/report.qmd|t20657.5021246537s|s45165b|45165|file|local|vector|||10.752||
+fit_file_model|stem|b2f26be9aae62dbc|54a560e19a79606d|2c530c1562a7fbd1|1720039687|stan/model.stan|t20657.5218086025s|s11515b|11515|file|local|vector|||0.001||
 plot_predictive_check|function|89584537e491151d
 plot_regional_predictions|function|5d6542c2247e3d87
 simulate_ODE|function|f79d4038ee02def2
@@ -23,3 +11,16 @@ plot_rates_pop_crop|function|050f3ae13d1c0ee6
 plot_gini_change|function|d1a275a33f08d788
 get_data_list|function|127ad82d201971d2
 plot_global_trajectories|function|3c73cdaad330c994
+data|stem|cdb8dfb6173371e7|e668cf0f8d2153b6|c2eabc04ac580af7|33550471||t20657.5346023784s|s80968b|80968|rds|local|vector|||0.484||
+fit_data|stem|e739f4a3f814e5e6|5651e3259231c142|63152551f5aaaa6a|2045157859||t20657.5346110349s|s102551b|102551|qs|local|vector|||0.715||
+fit_mcmc_model|stem|3ea0f5bd7a71291a|84bae59bb4f564f8|511b85d466bd44a6|-1258408334||t20658.0042990354s|s3864029245b|3864029245|qs|local|vector|||40555.53||
+fit_diagnostics_model|stem|e1436c9084555088|99c0b3ae17211f24|3676c6bc4504be8d|1035351838||t20658.0043355057s|s38317b|38317|fst_tbl|local|vector|||0.004||
+fit_draws_model|stem|64fc877e73b71eb4|c2057211be62d528|3676c6bc4504be8d|825927751||t20658.0047288326s|s4650396043b|4650396043|fst_tbl|local|vector|||9.904||
+fit_summary_model|stem|d129491d23981c76|76a50aa46cf0de81|637c99583f65d70b|1412698824||t20658.0153615884s|s23052168b|23052168|fst_tbl|local|vector|||914.449|The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.. The ESS has been capped to avoid unstable estimates.|
+plot_rates|stem|33b0a2b9cb9baaa9|53251515748c63ea|b077bc1823e4268e|-1943185017||t20658.016624815s|s4127788869b|4127788869|rds|local|vector|||0.818||
+plot_pred_regional_gini|stem|53af2f8dd9db8be1|74236aa74bd31501|6a3d6a95a28cef88|-1422095038||t20658.0171596584s|s1572922b|1572922|rds|local|vector|||41.329|Removed 7138 rows containing missing values or values outside the scale range (`geom_point()`).|
+plot_delta_gini|stem|e8be4bfe8cecd662|6c34b8686c7036fe|d442bbf04bf71e09|-1498721681||t20658.0184375048s|s4140294748b|4140294748|rds|local|vector|||0.37||
+plot_pred_regional_pop_size|stem|5462b028648a4a1c|31113d7dc24b792f|6a3d6a95a28cef88|488685914||t20658.0195184069s|s1773799b|1773799|rds|local|vector|||49.981|Removed 1165 rows containing missing values or values outside the scale range (`geom_point()`).|
+plot_pred_regional_cropland|stem|ef8cb1c1422d3fa5|09f81494a1860b2c|6a3d6a95a28cef88|-1260229565||t20658.020144844s|s1686949b|1686949|rds|local|vector|||48.55|Removed 1165 rows containing missing values or values outside the scale range (`geom_point()`).|
+plot_pp_check|stem|a8088de81f6f8e10|1d6a2441d2ec9340|6155239f3edf1e59|1602978789||t20658.0202477086s|s20212164b|20212164|rds|local|vector|||2.983||
+plot_pred_global|stem|42962e80ee6f1f6c|0760c8c348868573|205b3be5773460d5|-1061999205||t20658.0215405234s|s4128389445b|4128389445|rds|local|vector|||0.939||
