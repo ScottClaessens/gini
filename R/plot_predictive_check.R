@@ -20,7 +20,7 @@ plot_predictive_check <- function(data, fit_draws_model) {
     scale_x_continuous(
       name = "Population size (log + 1)",
       transform = "log1p",
-      breaks = c(0, 10, 100, 1000, 10000)
+      breaks = c(0, 100, 10000)
     )
   
   # y and yrep for cropland
@@ -36,7 +36,8 @@ plot_predictive_check <- function(data, fit_draws_model) {
     scale_x_continuous(
       name = "Cropland (log + 1)",
       transform = "log1p",
-      breaks = c(0, 1, 2, 5, 10, 20, 40, 80)
+      limits = c(0, 150),
+      breaks = c(0, 10, 100)
     )
   
   # y and yrep for gini

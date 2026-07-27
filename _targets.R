@@ -47,6 +47,20 @@ list(
     )
   ),
   tar_target(plot_delta_gini, plot_gini_change(fit_draws_model)),
-  tar_target(plot_rates, plot_rates_pop_crop(fit_draws_model))
+  tar_target(plot_rates, plot_rates_pop_crop(fit_draws_model)),
+  tar_target(
+    plot_effects_pop,
+    plot_varying_effects(data, fit_draws_model, effect = "betaP")
+  ),
+  tar_target(
+    plot_effects_crop,
+    plot_varying_effects(data, fit_draws_model, effect = "betaC")
+  ),
+  
+  # ────────────────────────────────────────────
+  # Produce report
+  # ────────────────────────────────────────────
+  
+  tar_quarto(report, "quarto/report.qmd")
 
 )

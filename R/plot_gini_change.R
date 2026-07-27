@@ -1,3 +1,9 @@
+#' Plot marginal effects of variables on change in Gini values
+#'
+#' @param fit_draws_model Tibble of posterior draws from the model.
+#'
+#' @returns A patchwork of ggplot objects
+#'
 plot_gini_change <- function(fit_draws_model) {
   
   # get parameters
