@@ -38,23 +38,24 @@ list(
   # ────────────────────────────────────────────
   
   tar_target(plot_pp_check, plot_predictive_check(data, fit_draws_model)),
-  tar_target(plot_pred_global, plot_global_trajectories(fit_draws_model)),
+  #tar_target(plot_pred_global, plot_global_trajectories(fit_draws_model)),
   tar_map(
-    values = tibble(variable = c("pop_size", "cropland", "gini")),
+    values = tibble(
+      variable = c("pop_size", "cropland", "irrigated", "urban", "gini")
+    ),
     tar_target(
       plot_pred_regional,
       plot_regional_predictions(data, fit_draws_model, variable)
     )
   ),
-  tar_target(plot_delta_gini, plot_gini_change(fit_draws_model)),
-  tar_target(plot_rates, plot_rates_pop_crop(fit_draws_model)),
-  tar_target(
-    plot_effects_pop,
-    plot_varying_effects(data, fit_draws_model, effect = "betaP")
-  ),
-  tar_target(
-    plot_effects_crop,
-    plot_varying_effects(data, fit_draws_model, effect = "betaC")
+  #tar_target(plot_delta_gini, plot_gini_change(fit_draws_model)),
+  #tar_target(plot_rates, plot_rates_pop_crop(fit_draws_model)),
+  tar_map(
+    tibble(effect = paste0("beta", c("P", "C", "I", "U"))),
+    tar_target(
+      plot_effects,
+      plot_varying_effects(data, fit_draws_model, effect)
+    )
   ),
   
   # ────────────────────────────────────────────

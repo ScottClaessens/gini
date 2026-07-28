@@ -24,13 +24,15 @@ plot_varying_effects <- function(data, fit_draws_model, effect, prob = 0.50,
   
   # get index for effect
   j <- case_when(
-    effect == "betaP" ~ 6,
-    effect == "betaC" ~ 7,
+    effect == "betaP" ~ 10,
+    effect == "betaC" ~ 11,
+    effect == "betaI" ~ 12,
+    effect == "betaU" ~ 13,
     TRUE ~ NA
   )
   
   # extract varying effects
-  for (r in 1:86) {
+  for (r in 1:length(unique(data$subregion))) {
     post <- fit_draws_model[[paste0("theta_r[1,", r, ",", j, "]")]]
     d$median[r] <- median(post)
     d$lower_in[r] <- quantile(post, (1 - prob) / 2)
@@ -67,6 +69,8 @@ plot_varying_effects <- function(data, fit_draws_model, effect, prob = 0.50,
       x = case_when(
         effect == "betaP" ~ "Direct effect of population size on inequality",
         effect == "betaC" ~ "Direct effect of cropland on inequality",
+        effect == "betaI" ~ "Direct effect of irrigated area on inequality",
+        effect == "betaU" ~ "Direct effect of urban area on inequality",
         TRUE ~ NA
       ),
       y = NULL
