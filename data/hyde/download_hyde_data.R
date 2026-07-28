@@ -7,7 +7,7 @@
 # coordinates from the Gini dataset. The resulting data file is written to 
 # hyde.csv in the data/hyde/ directory.
 #
-# Estimated run time on a MacBook Pro is around 20 minutes.
+# Estimated run time on a MacBook Pro is around one hour.
 #
 
 library(terra)      # v1.9-27
@@ -63,7 +63,7 @@ for (i in 1:length(time_slices)) {
   d <- bind_cols(date = time_slices[i], unique_lon_lat)
   
   # loop over different variables to extract
-  for (variable in c("cropland", "popc")) {
+  for (variable in c("popc", "uopp", "cropland", "tot_irri")) {
     
     # get url of zip file for data
     url <- paste0(
@@ -72,7 +72,7 @@ for (i in 1:length(time_slices)) {
       "gbc2025_7apr_base/zip/",
       names(time_slices)[i],
       "_",
-      ifelse(variable == "cropland", "lu", "pop"),
+      ifelse(variable %in% c("cropland", "tot_irri"), "lu", "pop"),
       ".zip"
     )
     
@@ -83,7 +83,7 @@ for (i in 1:length(time_slices)) {
     # identify raster file
     raster_file <- paste0(
       variable,
-      ifelse(variable == "cropland", "", "_"),
+      ifelse(variable %in% c("cropland", "tot_irri"), "", "_"),
       names(time_slices)[i],
       ".asc"
     )
@@ -98,8 +98,22 @@ for (i in 1:length(time_slices)) {
     # load raster file
     r <- rast(paste0("data/hyde/", raster_file))
     
-    # extract data from raster for lon-lat points
-    d[[variable]] <- extract(r, points)[, 2]
+    # project raster to a CRS with metre units
+    r_proj <- project(r, "EPSG:6933")  # equal-area global projection
+    
+    # project points
+    points_proj <- project(points, crs(r_proj))
+    
+    # create 50 km buffers
+    buffers <- buffer(points_proj, width = 50000)
+    
+    # extract mean value within each buffer
+    d[[variable]] <- extract(
+      r_proj,
+      buffers,
+      fun = mean,
+      na.rm = TRUE
+    )[, 2]
     
     # clean up
     file.remove(paste0("data/hyde/", raster_file))
@@ -117,7 +131,9 @@ out |>
     date      = date,
     longitude = Longitude,
     latitude  = Latitude,
+    pop_size  = round(popc, 2),
+    urban     = round(uopp, 2),
     cropland  = round(cropland, 2),
-    pop_size  = round(popc, 2)
+    irrigated = round(tot_irri, 2)
   ) |>
   write_csv("data/hyde/hyde.csv")
