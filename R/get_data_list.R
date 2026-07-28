@@ -36,6 +36,8 @@ get_data_list <- function(data) {
     N_regions  = length(unique(data$subregion)),
     N_obs_pop  = sum(!is.na(data$pop_size)),
     N_obs_crop = sum(!is.na(data$cropland)),
+    N_obs_irr  = sum(!is.na(data$irrigated)),
+    N_obs_urb  = sum(!is.na(data$urban)),
     N_obs_gini = sum(!is.na(data$gini)),
     date       = sort(unique(data$date)) / 100,
     i0         = which(sort(unique(data$date)) == 0),
@@ -43,10 +45,14 @@ get_data_list <- function(data) {
     region     = as.numeric(factor(data$subregion)),
     pop_size   = data$pop_size[!is.na(data$pop_size)],
     cropland   = data$cropland[!is.na(data$cropland)],
+    irrigated  = data$irrigated[!is.na(data$irrigated)],
+    urban      = data$urban[!is.na(data$urban)],
     gini       = data$gini[!is.na(data$gini)],
     date_idx   = sapply(data$date, \(x) which(x == sort(unique(data$date)))),
     pop_idx    = which(!is.na(data$pop_size)),
     crop_idx   = which(!is.na(data$cropland)),
+    irr_idx    = which(!is.na(data$irrigated)),
+    urb_idx    = which(!is.na(data$urban)),
     gini_idx   = which(!is.na(data$gini)),
     coords     = coords
   )

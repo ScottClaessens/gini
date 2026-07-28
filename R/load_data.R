@@ -54,7 +54,7 @@ load_data <- function(file_gini, file_hyde) {
     # summarise by subregion
     group_by(date, subregion) |>
     summarise(
-      across(longitude:pop_size, function(x) mean(x, na.rm = TRUE)),
+      across(longitude:irrigated, function(x) mean(x, na.rm = TRUE)),
       .groups = "drop"
     ) |>
     arrange(subregion, date)
@@ -71,6 +71,7 @@ load_data <- function(file_gini, file_hyde) {
     # remove Rapa Nui as there is no HYDE data
     filter(subregion != "Polynesia Rapa Nui") |>
     # arrange dataset
-    arrange(subregion, date)
+    arrange(subregion, date) |>
+    slice(1:448)
   
 }
