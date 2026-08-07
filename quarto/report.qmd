@@ -1,0 +1,111 @@
+---
+title: "Global dynamics of population, land use, and inequality"
+author: "Scott Claessens"
+format: pdf
+---
+
+# Overview
+
+...
+
+# Datasets
+
+...
+
+# Causal model
+
+Static DAG:
+
+```{r}
+library(dagitty)
+
+dagitty('dag{
+  P [pos = "0,0"]
+  C [pos = "1,-1"]
+  G [pos = "2,0"]
+  G <- P ;
+  G <- C ;
+  C <- P ;
+}') |> plot()
+```
+
+Dynamic DAG:
+
+```{r}
+dagitty('dag{
+  P0 [pos = "0,0"]
+  P1 [pos = "1,0"]
+  C0 [pos = "0,-1"]
+  C1 [pos = "1,-1"]
+  G0 [pos = "0,-2"]
+  G1 [pos = "1,-2"]
+  P1 <- P0 ;
+  C1 <- C0 ;
+  G1 <- G0 ;
+  C1 <- P0 ;
+  G1 <- P0 ;
+  G1 <- C0 ;
+}') |> plot()
+```
+
+# Statistical model
+
+Likelihoods:
+
+$$\begin{align}
+P &\sim \text{HurdleLogNormal}(p_P, \mu_P, \sigma) \\
+C &\sim \text{HurdleLogNormal}(p_C, \mu_C, \omega) \\
+G &\sim \text{BetaProportion}(\mu_G, \phi)
+\end{align}$$
+
+Differential equations:
+
+$$\frac{d\text{logit}(p_P)}{dt} = e^{b_P} \\
+\frac{d\mu_P}{dt} = e^{r_P} \\
+\frac{d\text{logit}(p_C)}{dt} = e^{b_C} \\
+\frac{d\mu_C}{dt} = e^{r_P}\frac{P}{C} \\
+\frac{d\text{logit}(\mu_G)}{dt} = r_G$$
+
+where:
+
+$$\begin{align}
+r_G &= \alpha \\
+&+ \beta_P p_P\text{log}(e^{\mu_P} + 1) \\
+&+ \beta_C p_C\text{log}(e^{\mu_C} + 1) \\
+&- e^{\gamma} \text{logit}(\mu_G)
+\end{align}$$
+
+Initial values:
+
+$$\begin{align}
+\text{logit}(p_P)(0) &\sim \mathcal{N}(-4, 0.5) \\
+\mu_P(0) &\sim \mathcal{N}(-1, 0.5) \\
+\text{logit}(p_C)(0) &\sim \mathcal{N}(-4, 0.5) \\
+\mu_C(0)  &\sim \mathcal{N}(-1, 0.5) \\
+\text{logit}(\mu_G)(0) &\sim \mathcal{N}(-1, 0.5)
+\end{align}$$
+
+In addition:
+
+- Varying effects across subregions, with spatial GPs for $\alpha$ and $\text{logit}(\mu_G)(0)$. Varying effects have variance $\tau$ and GPs have length scale $lscale$
+- Differential equations for $P$ and $C$ estimated piecewise across three time periods: (1) 10,000 BCE to 0 CE, (2) 0 CE to 1600 CE, and (3) 1600 CE to present
+
+Priors:
+
+$$\begin{align}
+b_P &\sim \text{Normal}(-2, 0.5) \\
+r_P &\sim \text{Normal}(-2, 0.5) \\
+b_C &\sim \text{Normal}(-2, 0.5) \\
+r_C &\sim \text{Normal}(-2, 0.5) \\
+\alpha &\sim \text{Normal}(0, 0.5) \\
+\beta_P &\sim \text{Normal}(0, 0.5) \\
+\beta_C &\sim \text{Normal}(0, 0.5) \\
+\gamma &\sim \text{Normal}(-2, 0.5) \\
+\tau &\sim \text{Exponential}(2) \\
+lscale &\sim \text{Exponential}(2) \\
+\sigma &\sim \text{Exponential}(2) \\
+\omega &\sim \text{Exponential}(2) \\
+\phi &\sim \text{Exponential}(2) \\
+\end{align} $$
+
+# Results
