@@ -34,8 +34,7 @@ plot_regional_predictions <- function(data, fit_draws_model,
       region = levels(factor(data$subregion))[as.numeric(region)],
       date   = seq(-10000, 2000, length.out = 121)[as.numeric(date)],
       var    = c("logit_pop", "raw_pop", "logit_crop", "raw_crop",
-                 "logit_irr", "raw_irr", "logit_urb", "raw_urb",
-                 "gini")[as.numeric(var)]
+                 "logit_urb", "raw_urb", "gini")[as.numeric(var)]
     ) |>
     pivot_wider(
       names_from = "var",
@@ -44,15 +43,14 @@ plot_regional_predictions <- function(data, fit_draws_model,
     mutate(
       pop_size  = plogis(logit_pop)  * exp(raw_pop),
       cropland  = plogis(logit_crop) * exp(raw_crop),
-      irrigated = plogis(logit_irr)  * exp(raw_irr),
       urban     = plogis(logit_urb)  * exp(raw_urb),
       gini      = plogis(gini)
     ) |>
     dplyr::select(
-      c(region, date, pop_size, cropland, irrigated, urban, gini)
+      c(region, date, pop_size, cropland, urban, gini)
     ) |>
     pivot_longer(
-      cols = c(pop_size, cropland, irrigated, urban, gini),
+      cols = c(pop_size, cropland, urban, gini),
       names_to = "var"
     ) |>
     group_by(region, date, var) |>
@@ -103,7 +101,6 @@ plot_regional_predictions <- function(data, fit_draws_model,
       name = case_when(
         variable == "pop_size"  ~ "Population size (log + 1)",
         variable == "cropland"  ~ "Cropland (log + 1)",
-        variable == "irrigated" ~ "Irrigated (log + 1)",
         variable == "urban"     ~ "Urban (log + 1)",
         variable == "gini"      ~ "Gini"
       )

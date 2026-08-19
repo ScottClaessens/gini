@@ -1,7 +1,7 @@
 #' Plot rates from Stan model
 #' 
-#' Plot rates of population growth and production of cropland, irrigation, and
-#' urban areas from Stan model
+#' Plot rates of population growth and production of cropland, and urban areas 
+#' from Stan model
 #'
 #' @param fit_draws_model Tibble of posterior draws from the model
 #'
@@ -13,7 +13,6 @@ plot_model_rates <- function(fit_draws_model) {
   var_names <- c(
     "pop"  = "Average rate of population\ngrowth per capita",
     "crop" = "Average rate of cropland\nproduction per capita",
-    "irr"  = "Average rate of irrigation\nproduction per capita",
     "urb"  = "Average rate of urban area\nproduction per capita"
   )
   
@@ -33,12 +32,9 @@ plot_model_rates <- function(fit_draws_model) {
       crop_1 = exp(fit_draws_model$`theta[1,4]`),
       crop_2 = exp(fit_draws_model$`theta[2,4]`),
       crop_3 = exp(fit_draws_model$`theta[3,4]`),
-      irr_1  = exp(fit_draws_model$`theta[1,6]`),
-      irr_2  = exp(fit_draws_model$`theta[2,6]`),
-      irr_3  = exp(fit_draws_model$`theta[3,6]`),
-      urb_1  = exp(fit_draws_model$`theta[1,8]`),
-      urb_2  = exp(fit_draws_model$`theta[2,8]`),
-      urb_3  = exp(fit_draws_model$`theta[3,8]`),
+      urb_1  = exp(fit_draws_model$`theta[1,6]`),
+      urb_2  = exp(fit_draws_model$`theta[2,6]`),
+      urb_3  = exp(fit_draws_model$`theta[3,6]`),
     ) |>
     pivot_longer(
       cols = everything(),

@@ -40,23 +40,6 @@ plot_predictive_check <- function(data, fit_draws_model) {
       breaks = c(0, 10, 100)
     )
   
-  # y and yrep for irrigated
-  y <- data$irrigated[!is.na(data$irrigated)]
-  yrep <-
-    fit_draws_model |>
-    dplyr::select(starts_with("irrigated_rep")) |>
-    as.matrix()
-  
-  # plot for irrigated
-  pC <- 
-    bayesplot::ppc_dens_overlay(y, yrep[1:50, ]) +
-    scale_x_continuous(
-      name = "Irrigated area (log + 1)",
-      transform = "log1p",
-      limits = c(0, 10),
-      breaks = c(0, 1, 2, 4, 8)
-    )
-  
   # y and yrep for urban
   y <- data$urban[!is.na(data$urban)]
   yrep <-
@@ -65,7 +48,7 @@ plot_predictive_check <- function(data, fit_draws_model) {
     as.matrix()
   
   # plot for urban
-  pD <- 
+  pC <- 
     bayesplot::ppc_dens_overlay(y, yrep[1:50, ]) +
     scale_x_continuous(
       name = "Urban area (log + 1)",
@@ -82,7 +65,7 @@ plot_predictive_check <- function(data, fit_draws_model) {
     as.matrix()
   
   # plot for gini
-  pE <- 
+  pD <- 
     bayesplot::ppc_dens_overlay(y, yrep[1:50, ]) +
     scale_x_continuous(
       name = "Gini",
@@ -91,7 +74,7 @@ plot_predictive_check <- function(data, fit_draws_model) {
   
   # put together
   out <- 
-    ((pA + pB) / (pC + pD + pE)) +
+    ((pA + pB) / (pC + pD)) +
     plot_layout(guides = "collect")
   
   # cleanup
@@ -102,7 +85,7 @@ plot_predictive_check <- function(data, fit_draws_model) {
     plot = out,
     filename = "plots/pp_check.pdf",
     height = 5,
-    width = 7
+    width = 5
   )
   
   # return

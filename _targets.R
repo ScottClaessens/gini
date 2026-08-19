@@ -30,18 +30,24 @@ list(
     iter_warmup = 500,
     iter_sampling = 500,
     parallel_chains = 4,
-    seed = 1
+    seed = 1234
   ),
   
   # ────────────────────────────────────────────
   # Plot model results, predictions, and checks
   # ────────────────────────────────────────────
   
-  tar_target(plot_pp_check, plot_predictive_check(data, fit_draws_model)),
-  #tar_target(plot_pred_global, plot_global_trajectories(fit_draws_model)),
+  tar_target(
+    plot_pp_check,
+    plot_predictive_check(data, fit_draws_model)
+  ),
+  tar_target(
+    plot_pred_global,
+    plot_global_trajectories(fit_draws_model)
+  ),
   tar_map(
     values = tibble(
-      variable = c("pop_size", "cropland", "irrigated", "urban", "gini")
+      variable = c("pop_size", "cropland", "urban", "gini")
     ),
     tar_target(
       plot_pred_regional,
@@ -51,7 +57,7 @@ list(
   tar_target(plot_delta_gini, plot_gini_change(fit_draws_model)),
   tar_target(plot_rates, plot_model_rates(fit_draws_model)),
   tar_map(
-    tibble(effect = paste0("beta", c("P", "C", "I", "U"))),
+    tibble(effect = paste0("beta", c("P", "C", "U"))),
     tar_target(
       plot_effects,
       plot_varying_effects(data, fit_draws_model, effect)
