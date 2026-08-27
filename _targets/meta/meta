@@ -33,3 +33,12 @@ plot_varying_effects|function|6f42edc4813a7242
 plot_gini_change|function|1c46a8e071f5ae1f
 get_data_list|function|8e80ebbb964cb983
 plot_global_trajectories|function|01d2032e360b3d14
+plot_predictive_check|function|9624f8056417479a
+plot_regional_predictions|function|82b639059e853187
+simulate_ODE|function|97a80d0169c285ba
+plot_model_rates|function|33bb0c4ce70ba826
+load_data|function|13461fc638994187
+plot_varying_effects|function|6f42edc4813a7242
+plot_gini_change|function|1c46a8e071f5ae1f
+get_data_list|function|8e80ebbb964cb983
+plot_global_trajectories|function|01d2032e360b3d14

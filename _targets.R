@@ -1,11 +1,30 @@
 options(tidyverse.quiet = TRUE)
+library(crew)
+library(crew.cluster)
 library(stantargets)
 library(targets)
 library(tarchetypes)
 library(tidyverse)
-
 tar_option_set(
-  packages = c("bayesplot", "cmdstanr", "patchwork", "tidybayes", "tidyverse")
+  packages = c("bayesplot", "cmdstanr", "patchwork", "tidybayes", "tidyverse"),
+  controller = crew_controller_slurm(
+    workers = 1,
+    options_metrics = crew_options_metrics(
+      path = "/dev/stdout",
+      seconds_interval = 60
+    ),
+    options_cluster = crew_options_slurm(
+      script_lines = c(
+        "#SBATCH --account=arch039044",
+        "module load languages/R/4.5.1"
+      ),
+      memory_gigabytes_required = 100,
+      cpus_per_task = 8,
+      time_minutes = 4 * 24 * 60,
+      log_output = "crew_log_%A.out",
+      log_error = "crew_log_%A.err"
+    )
+  )
 )
 tar_source()
 
@@ -27,9 +46,9 @@ list(
     fit,
     stan_files = "stan/model.stan",
     data = get_data_list(data),
-    iter_warmup = 500,
+    iter_warmup = 1000,
     iter_sampling = 500,
-    parallel_chains = 4,
+    parallel_chains = 8,
     seed = 1
   ),
   
