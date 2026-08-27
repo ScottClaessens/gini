@@ -71,6 +71,7 @@ load_data <- function(file_gini, file_hyde) {
     # remove Rapa Nui as there is no HYDE data
     filter(subregion != "Polynesia Rapa Nui") |>
     # arrange dataset
-    arrange(subregion, date)
+    arrange(subregion, date) |>
+    slice(1:270)
   
 }

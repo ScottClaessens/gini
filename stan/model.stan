@@ -69,7 +69,7 @@ data {
   int<lower=1, upper=N> N_obs_irr;               // number of observed irrigated
   int<lower=1, upper=N> N_obs_urb;               // number of observed urban
   int<lower=1, upper=N> N_obs_gini;              // number of observed gini
-  array[N_dates] real date;                      // dates (in millenia)
+  array[N_dates] real date;                      // dates (in centuries)
   int i0;                                        // index for 0 CE
   int i1600;                                     // index for 1600 CE
   array[N] int<lower=1, upper=N_regions> region; // region ids
