@@ -1,7 +1,7 @@
 #' Plot global trajectories implied by fitted model
 #'
 #' @param fit_draws_model Tibble of posterior draws from the model.
-#' @param intervention_vars Integers, 1-7. Which variables to intervene on.
+#' @param intervention_vars Integers, 1-5. Which variables to intervene on.
 #' @param intervention_values Numeric. Which values to set during the 
 #'   interventions.
 #' @param intervention_times Numeric. When to implement the interventions.
@@ -30,7 +30,7 @@ plot_global_trajectories <- function(fit_draws_model,
   i3 <- (length(c(times1, times2)) + 1):length(c(times1, times2, times3))
   
   # set up results array
-  out <- array(NA, dim = c(ndraws, length(c(times1, times2, times3)), 7))
+  out <- array(NA, dim = c(ndraws, length(c(times1, times2, times3)), 5))
   
   # get posterior trajectories
   for (j in 1:ndraws) {
@@ -43,8 +43,6 @@ plot_global_trajectories <- function(fit_draws_model,
           draws$init_pop_size[j],
           draws$init_logit_crop[j],
           draws$init_cropland[j],
-          draws$init_logit_urb[j],
-          draws$init_urban[j],
           draws$init_gini[j]
         ),
         theta = c(
@@ -55,10 +53,7 @@ plot_global_trajectories <- function(fit_draws_model,
           draws$`theta[1,5]`[j],
           draws$`theta[1,6]`[j],
           draws$`theta[1,7]`[j],
-          draws$`theta[1,8]`[j],
-          draws$`theta[1,9]`[j],
-          draws$`theta[1,10]`[j],
-          draws$`theta[1,11]`[j]
+          draws$`theta[1,8]`[j]
         ),
         times = times1,
         intervention_vars = intervention_vars,
@@ -75,9 +70,7 @@ plot_global_trajectories <- function(fit_draws_model,
           out[j, length(times1), 2],
           out[j, length(times1), 3],
           out[j, length(times1), 4],
-          out[j, length(times1), 5],
-          out[j, length(times1), 6],
-          out[j, length(times1), 7]
+          out[j, length(times1), 5]
         ),
         theta = c(
           draws$`theta[2,1]`[j],
@@ -87,10 +80,7 @@ plot_global_trajectories <- function(fit_draws_model,
           draws$`theta[1,5]`[j],
           draws$`theta[1,6]`[j],
           draws$`theta[1,7]`[j],
-          draws$`theta[1,8]`[j],
-          draws$`theta[1,9]`[j],
-          draws$`theta[1,10]`[j],
-          draws$`theta[1,11]`[j]
+          draws$`theta[1,8]`[j]
         ),
         times = times2,
         intervention_vars = intervention_vars,
@@ -107,9 +97,7 @@ plot_global_trajectories <- function(fit_draws_model,
           out[j, length(c(times1, times2)), 2],
           out[j, length(c(times1, times2)), 3],
           out[j, length(c(times1, times2)), 4],
-          out[j, length(c(times1, times2)), 5],
-          out[j, length(c(times1, times2)), 6],
-          out[j, length(c(times1, times2)), 7]
+          out[j, length(c(times1, times2)), 5]
         ),
         theta = c(
           draws$`theta[3,1]`[j],
@@ -119,10 +107,7 @@ plot_global_trajectories <- function(fit_draws_model,
           draws$`theta[1,5]`[j],
           draws$`theta[1,6]`[j],
           draws$`theta[1,7]`[j],
-          draws$`theta[1,8]`[j],
-          draws$`theta[1,9]`[j],
-          draws$`theta[1,10]`[j],
-          draws$`theta[1,11]`[j]
+          draws$`theta[1,8]`[j]
         ),
         times = times3,
         intervention_vars = intervention_vars,
@@ -135,8 +120,7 @@ plot_global_trajectories <- function(fit_draws_model,
   # get trajectories for each variable
   P <- plogis(out[, , 1]) * exp(out[, , 2])
   C <- plogis(out[, , 3]) * exp(out[, , 4])
-  U <- plogis(out[, , 5]) * exp(out[, , 6])
-  G <- plogis(out[, , 7])
+  G <- plogis(out[, , 5])
   
   # plot population size trajectory
   pA <-
@@ -192,35 +176,8 @@ plot_global_trajectories <- function(fit_draws_model,
     geom_line() +
     theme_classic()
   
-  # plot urban trajectory
-  pC <-
-    tibble(
-      variable = "Urban",
-      time = c(times1, times2, times3),
-      median = apply(U, 2, function(x) median(log(x + 1))),
-      lower  = apply(U, 2, function(x) quantile(log(x + 1), 0.025)),
-      upper  = apply(U, 2, function(x) quantile(log(x + 1), 0.975)),
-    ) |>
-    ggplot(
-      mapping = aes(
-        x = ((time * 100) - 2026) / 1000,
-        y = median,
-        ymin = lower,
-        ymax = upper
-      )
-    ) +
-    geom_ribbon(
-      fill = "#CC93CC"
-    ) +
-    labs(
-      x = "Time before present (ky)",
-      y = "Urban\n(log + 1)"
-    ) +
-    geom_line() +
-    theme_classic()
-  
   # plot gini trajectory
-  pD <-
+  pC <-
     tibble(
       variable = "Gini",
       time = c(times1, times2, times3),
@@ -250,18 +207,18 @@ plot_global_trajectories <- function(fit_draws_model,
     theme_classic()
   
   # put together
-  p <- (pA / pB / pC / pD) + plot_layout(axes = "collect_x")
+  p <- (pA / pB / pC) + plot_layout(axes = "collect_x")
   
   # save
   ggsave(
     plot = p,
     file = "plots/global_predictions.pdf",
-    height = 6,
+    height = 4,
     width = 6
   )
   
   # cleanup
-  rm(fit_draws_model, out, P, C, U, G)
+  rm(fit_draws_model, out, P, C, G)
   
   # return
   p

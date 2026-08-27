@@ -24,9 +24,10 @@ plot_varying_effects <- function(data, fit_draws_model, effect, prob = 0.50,
   
   # get index for effect
   j <- case_when(
-    effect == "betaP" ~ 8,
-    effect == "betaC" ~ 9,
-    effect == "betaU" ~ 10,
+    effect == "betaP" ~ 10,
+    effect == "betaC" ~ 11,
+    effect == "betaI" ~ 12,
+    effect == "betaU" ~ 13,
     TRUE ~ NA
   )
   
@@ -68,6 +69,7 @@ plot_varying_effects <- function(data, fit_draws_model, effect, prob = 0.50,
       x = case_when(
         effect == "betaP" ~ "Direct effect of population size on inequality",
         effect == "betaC" ~ "Direct effect of cropland on inequality",
+        effect == "betaI" ~ "Direct effect of irrigated area on inequality",
         effect == "betaU" ~ "Direct effect of urban area on inequality",
         TRUE ~ NA
       ),

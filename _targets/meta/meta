@@ -1,31 +1,21 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 file_gini|stem|55a6666557c52dc2|f68edb0f308568cc|2c530c1562a7fbd1|1176102249|data/gini/SiteGiniLevel.csv|t20490.6654210819s|s574550b|574550|file|local|vector|||1.78||
 file_hyde|stem|22a26928e786a48b|9ef94c91729879a2|2c530c1562a7fbd1|1001141386|data/hyde/hyde.csv|t20662.6607739945s|s2908506b|2908506|file|local|vector|||0.931||
-report|stem|16c92929c7b09c21|b665e3fc56248932|2c530c1562a7fbd1|787668912|quarto/report.pdf*quarto/report.qmd|t20672.5915005633s|s45184b|45184|file|local|vector|||8.697||
-fit_file_model|stem|1f71a5260fa487d9|54a560e19a79606d|2c530c1562a7fbd1|1720039687|stan/model.stan|t20682.5701019505s|s14391b|14391|file|local|vector|||0.001||
-fit_diagnostics_model|stem|d0b8a7dc85dd0212|99c0b3ae17211f24|e12240dfabe2bb17|1035351838||t20682.7268916866s|s38596b|38596|fst_tbl|local|vector|||0.001||
-fit_draws_model|stem|ee03687e9afd441f|c2057211be62d528|e12240dfabe2bb17|825927751||t20682.7268971477s|s157788123b|157788123|fst_tbl|local|vector|||0.174||
-fit_summary_model|stem|5ea8b70acdf48eea|76a50aa46cf0de81|a954a42f137a96c7|1412698824||t20682.7271305481s|s832065b|832065|fst_tbl|local|vector|||20.04|The ESS has been capped to avoid unstable estimates.|
-plot_effects_betaC|stem|4bf4c1cda7df9135|39c767346e62d2b5|4b03d4fdc2ff3b57|-2109791998||t20682.727136498s|s386447b|386447|rds|local|vector|||0.319||
-plot_rates|stem|ee9194ed2b05d31a|e22f02e163ca3dcc|1d8958d00884ac49|-1943185017||t20682.7271833849s|s140707305b|140707305|rds|local|vector|||0.178||
-plot_pred_regional_gini|stem|99a0b9841970f67f|74236aa74bd31501|291bf2d3a399854a|-1422095038||t20682.7272175165s|s551213b|551213|rds|local|vector|||2.617|Removed 415 rows containing missing values or values outside the scale range (`geom_point()`).|
-plot_pred_regional_urban|stem|e787e8a83ae57d3d|2211cf232985d171|291bf2d3a399854a|-2073906563||t20682.727247201s|s562682b|562682|rds|local|vector|||2.34|Removed 33 rows containing missing values or values outside the scale range (`geom_point()`).|
-plot_effects_betaP|stem|4f70500fa30c2131|9860bc3eec8ca1e7|4b03d4fdc2ff3b57|989790954||t20682.7272510135s|s386621b|386621|rds|local|vector|||0.148||
-plot_delta_gini|stem|48c09f267e0d8bce|6c34b8686c7036fe|b22a80ae94aea8c1|-1498721681||t20682.7273065348s|s156706999b|156706999|rds|local|vector|||0.287||
-plot_pred_regional_pop_size|stem|aaee81364ff8e343|31113d7dc24b792f|291bf2d3a399854a|488685914||t20682.7273362338s|s566461b|566461|rds|local|vector|||2.309|Removed 33 rows containing missing values or values outside the scale range (`geom_point()`).|
-plot_effects_betaU|stem|a37329c17f3d0e98|64bf325a25814faf|4b03d4fdc2ff3b57|1694480316||t20682.7273401314s|s386621b|386621|rds|local|vector|||0.151||
-plot_pred_regional_cropland|stem|41a0df06ce697d93|09f81494a1860b2c|291bf2d3a399854a|-1260229565||t20682.7273691037s|s566184b|566184|rds|local|vector|||2.294|Removed 33 rows containing missing values or values outside the scale range (`geom_point()`).|
-plot_pp_check|stem|12c7ca28943a8472|1d6a2441d2ec9340|d6ff62e8abf7ef82|1602978789||t20682.7273837177s|s2410080b|2410080|rds|local|vector|||0.924|Removed 361 rows containing non-finite outside the scale range (`stat_density()`).|
-plot_pred_global|stem|9ca2210b7f7c1b99|0760c8c348868573|6f74a0ab6e3b4338|-1061999205||t20682.7274444744s|s141490704b|141490704|rds|local|vector|||1.113||
-data|stem|adf1fed9b71fa94d|e668cf0f8d2153b6|18ee34eba670d2aa|33550471||t20682.7328937822s|s108778b|108778|rds|local|vector|||0.556||
-fit_data|stem|a69e76c35a89be40|5651e3259231c142|39a39ecb19998cc6|2045157859||t20682.7337870996s|s150439b|150439|qs|local|vector|||0.669||
-plot_predictive_check|function|e8692aedabc95450
-plot_regional_predictions|function|5e14620cdf54c000
-simulate_ODE|function|1257d9cefeeb527d
-plot_model_rates|function|eb0a475585a7cb79
-load_data|function|421e6e444a5a928c
-plot_varying_effects|function|5e4e9b547f081c17
-plot_gini_change|function|f437c81f55adb6ab
+model_file|stem|95dc72f10ac990e5|54a560e19a79606d|2c530c1562a7fbd1|363483304|stan/model.stan|t20662.7065218096s|s17421b|17421|file|local|vector|||0.95||
+model|stem|59ac13e1368216d2|7bba957e7f5946fd|9ca8ce885f34a2e5|808688450||t20672.5813849957s|s15174b|15174|rds|local|vector|||0.031||
+data|stem|0f0bf759fe34de84|e668cf0f8d2153b6|ef1ad323217ee870|33550471||t20672.5813910216s|s4327b|4327|rds|local|vector|||0.495||
+plot_predictive_check|function|9624f8056417479a
+plot_regional_predictions|function|82b639059e853187
+simulate_ODE|function|f79d4038ee02def2
+plot_model_rates|function|33bb0c4ce70ba826
+load_data|function|13461fc638994187
+plot_varying_effects|function|6f42edc4813a7242
+plot_gini_change|function|1c46a8e071f5ae1f
 get_data_list|function|8e80ebbb964cb983
-plot_global_trajectories|function|f2d3f34f7bedd291
-fit_mcmc_model|stem|e58991bb69805774|003066c34b514bc9|b12be5ef8ecefb63|-1258408334||t20682.7268899973s||125625893|qs|local|vector|||86367.72||vector memory limit of 24.0 Gb reached, see mem.maxVSize()
+plot_global_trajectories|function|3c73cdaad330c994
+fit_file_model|stem|95dc72f10ac990e5|54a560e19a79606d|2c530c1562a7fbd1|1720039687|stan/model.stan|t20662.7065218096s|s17421b|17421|file|local|vector|||0||
+report|stem|16c92929c7b09c21|b665e3fc56248932|2c530c1562a7fbd1|787668912|quarto/report.pdf*quarto/report.qmd|t20672.5915005633s|s45184b|45184|file|local|vector|||8.697||
+fit_data|stem|bda014578120dbb6|5651e3259231c142|8d347ad265b437df|2045157859||t20672.591509336s|s5228b|5228|qs|local|vector|||0.028||
+fit_mcmc_model|stem|e62aa4a311829aef|aea0e293c8b7f433|f4f86e5f11e2b67d|-1258408334||t20672.6231281065s|s21964675b|21964675|qs|local|vector|||2731.591||
+fit_diagnostics_model|stem|81bcb937307c8d4e|99c0b3ae17211f24|585205e2034f3618|1035351838||t20672.6231295299s|s31081b|31081|fst_tbl|local|vector|||0.001||
+fit_draws_model|stem||c2057211be62d528|585205e2034f3618|825927751||t20672.6231313944s||0|fst_tbl|local|vector|||0.061||Assertion on 'files' failed: File does not exist: '/Users/sc12082/Documents/ActiveRepositories/gini/stan/model-202608071512-1-728468.csv'.

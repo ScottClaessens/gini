@@ -7,10 +7,11 @@
 plot_gini_change <- function(fit_draws_model) {
   
   # get parameters
-  alpha <- fit_draws_model$`theta[1,7]`
-  betaP <- fit_draws_model$`theta[1,8]`
-  betaC <- fit_draws_model$`theta[1,9]`
-  betaU <- fit_draws_model$`theta[1,10]`
+  alpha <- fit_draws_model$`theta[1,9]`
+  betaP <- fit_draws_model$`theta[1,10]`
+  betaC <- fit_draws_model$`theta[1,11]`
+  betaI <- fit_draws_model$`theta[1,12]`
+  betaU <- fit_draws_model$`theta[1,13]`
   
   # function to plot marginal effect of predictor on delta gini
   plot_marginal <- function(beta, xlim, colour, xlab) {
@@ -69,15 +70,17 @@ plot_gini_change <- function(fit_draws_model) {
                       xlab = "Population size")
   pB <- plot_marginal(betaC, xlim = c(0, 5), colour = "lightgreen",
                       xlab = "Cropland")
-  pC <- plot_marginal(betaU, xlim = c(0, 5), colour = "#CC93CC",
+  pC <- plot_marginal(betaI, xlim = c(0, 5), colour = "#FFB09C",
+                      xlab = "Irrigated area")
+  pD <- plot_marginal(betaU, xlim = c(0, 5), colour = "#CC93CC",
                       xlab = "Urban area")
   
   # put together
   out <- 
-    pA + pB + pC +
+    pA + pB + pC + pD +
     plot_layout(
-      nrow = 1,
-      ncol = 3,
+      nrow = 2,
+      ncol = 2,
       axis_titles = "collect_y"
     )
   
@@ -85,7 +88,7 @@ plot_gini_change <- function(fit_draws_model) {
   ggsave(
     plot = out,
     file = "plots/gini_change.pdf",
-    height = 3,
+    height = 6,
     width = 6
   )
   
