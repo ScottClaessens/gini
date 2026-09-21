@@ -18,9 +18,9 @@ tar_option_set(
         "#SBATCH --account=arch039044",
         "module load languages/R/4.5.1"
       ),
-      memory_gigabytes_required = 100,
+      memory_gigabytes_required = 200,
       cpus_per_task = 8,
-      time_minutes = 4 * 24 * 60,
+      time_minutes = 10 * 24 * 60,
       log_output = "crew_log_%A.out",
       log_error = "crew_log_%A.err"
     )
@@ -48,6 +48,7 @@ list(
     data = get_data_list(data),
     iter_warmup = 1000,
     iter_sampling = 500,
+    chains = 8,
     parallel_chains = 8,
     seed = 1
   ),
@@ -75,12 +76,12 @@ list(
       plot_effects,
       plot_varying_effects(data, fit_draws_model, effect)
     )
-  ),
+  )#,
   
   # ────────────────────────────────────────────
   # Produce report
   # ────────────────────────────────────────────
   
-  tar_quarto(report, "quarto/report.qmd")
+  #tar_quarto(report, "quarto/report.qmd")
 
 )
