@@ -7,29 +7,29 @@ fit_file_model|stem|652cc6ee33a8157a|54a560e19a79606d|2c530c1562a7fbd1|172003968
 file_hyde|stem|22a26928e786a48b|9ef94c91729879a2|2c530c1562a7fbd1|1001141386|data/hyde/hyde.csv|t20672.6829622566s|s2908506b|2908506|file|local|vector|||0.931||
 data|stem|9015163876095324|e668cf0f8d2153b6|18ee34eba670d2aa|33550471||t20695.8301311812s|s108289b|108289|rds|local|vector|||1.987||
 fit_data|stem|2872b59e62e1cf75|5651e3259231c142|75528c3566bb13dd|2045157859||t20695.8301661286s|s151791b|151791|qs|local|vector|||2.599||
-plot_predictive_check|function|9624f8056417479a
-plot_regional_predictions|function|82b639059e853187
-simulate_ODE|function|97a80d0169c285ba
-plot_model_rates|function|33bb0c4ce70ba826
-load_data|function|421e6e444a5a928c
-plot_varying_effects|function|6f42edc4813a7242
-plot_gini_change|function|1c46a8e071f5ae1f
-get_data_list|function|8e80ebbb964cb983
-plot_global_trajectories|function|01d2032e360b3d14
 fit_mcmc_model|stem|ea53b59ef23bb128|81421ef9d706bab1|2638fa26748f7adf|-1258408334||t20714.9962815743s|s13864474900b|13864474900|qs|local|vector|||450048.623||
 fit_diagnostics_model|stem|97a344db150620a1|99c0b3ae17211f24|1ba6e26802b6223a|1035351838||t20714.9967127515s|s73901b|73901|fst_tbl|local|vector|||0.125||
 fit_summary_model|stem|d42da0bcf7a7af27|76a50aa46cf0de81|23f2d64a5d87c70a|1412698824||t20715.0679455169s|s41437878b|41437878|fst_tbl|local|vector|||6135.746||
 fit_draws_model|stem|16b074eee3838fba|c2057211be62d528|1ba6e26802b6223a|825927751||t20715.0689049717s|s16602268018b|16602268018|fst_tbl|local|vector|||26.26||
 plot_pred_regional_irrigated|stem|cbf2f368d89c3ede|53b6693e3f3b7bed|5660849af74e79ae|369578777||t20715.0716599659s|s1540998b|1540998|rds|local|vector|||188.934|Removed 1165 rows containing missing values or values outside the scale range (`geom_point()`).|
 plot_effects_betaC|stem|37d9bfdfb13935ce|39c767346e62d2b5|4ae10180e554fe53|-2109791998||t20715.0720486452s|s523044b|523044|rds|local|vector|||0.436||
-plot_rates|stem|7b8475ef185208dd|e22f02e163ca3dcc|297724dae35b9a1a|-1943185017||t20715.0795437189s|s14722889226b|14722889226|rds|local|vector|||1.237||
 plot_pred_regional_gini|stem|3a1dec8be59b4b05|74236aa74bd31501|5660849af74e79ae|-1422095038||t20715.0822128383s|s1688659b|1688659|rds|local|vector|||179.057|Removed 7138 rows containing missing values or values outside the scale range (`geom_point()`).|
 plot_pred_regional_urban|stem|a08753115e05a748|2211cf232985d171|5660849af74e79ae|-2073906563||t20715.0847533008s|s1579897b|1579897|rds|local|vector|||191.028|Removed 1165 rows containing missing values or values outside the scale range (`geom_point()`).|
 plot_effects_betaI|stem|908c26317376348b|719edd3c58f13d2c|4ae10180e554fe53|837336818||t20715.0851182481s|s522856b|522856|rds|local|vector|||0.414||
 plot_effects_betaP|stem|5339ba8e067b2ef7|9860bc3eec8ca1e7|4ae10180e554fe53|989790954||t20715.0855099528s|s522745b|522745|rds|local|vector|||0.393||
-plot_delta_gini|stem|00120c723af03581|6c34b8686c7036fe|6169b4459f00ef29|-1498721681||t20715.0931440947s|s14760078341b|14760078341|rds|local|vector|||1.31||
 plot_pred_regional_pop_size|stem|93b76dac0a7e4fd9|31113d7dc24b792f|5660849af74e79ae|488685914||t20715.0960448518s|s1886851b|1886851|rds|local|vector|||194.568|Removed 1165 rows containing missing values or values outside the scale range (`geom_point()`).|
 plot_effects_betaU|stem|27c69909de1c8ee6|64bf325a25814faf|4ae10180e554fe53|1694480316||t20715.0964396906s|s522915b|522915|rds|local|vector|||0.403||
 plot_pred_regional_cropland|stem|415d6d7c8019ad27|09f81494a1860b2c|5660849af74e79ae|-1260229565||t20715.0992084116s|s1817777b|1817777|rds|local|vector|||201.081|Removed 1165 rows containing missing values or values outside the scale range (`geom_point()`).|
-plot_pp_check|stem|a6f0e6566ea84b1a|1d6a2441d2ec9340|d4db16cd0ba7c503|1602978789||t20715.0998692946s|s32926373b|32926373|rds|local|vector|||16.497|Removed 171 rows containing non-finite outside the scale range (`stat_density()`).. Removed 6684 rows containing non-finite outside the scale range (`stat_density()`).. Removed 74 rows containing non-finite outside the scale range (`stat_density()`).. Removed 8140 rows containing non-finite outside the scale range (`stat_density()`).. Removed 200 rows containing non-finite outside the scale range (`stat_density()`).|
-plot_pred_global|stem|ac1d0f8163519f82|0760c8c348868573|ef21b820aea7754a|-1061999205||t20715.1076322904s|s14723330822b|14723330822|rds|local|vector|||7.789||
+plot_predictive_check|function|339edc0e96afe76b
+plot_regional_predictions|function|82b639059e853187
+simulate_ODE|function|97a80d0169c285ba
+plot_model_rates|function|661cbb5b861cb74f
+load_data|function|421e6e444a5a928c
+plot_varying_effects|function|6f42edc4813a7242
+plot_gini_change|function|61e96da2e58f50d2
+get_data_list|function|8e80ebbb964cb983
+plot_global_trajectories|function|bcf01f3c13eb15d4
+plot_rates|stem|61a8bacfa47907e8|e22f02e163ca3dcc|2b8001eb1acdde41|-1943185017||t20717.5818213388s|s1619427b|1619427|rds|local|vector|||6.893||
+plot_delta_gini|stem|049be58fcbf045a5|6c34b8686c7036fe|357c9a5fdf8925a9|-1498721681||t20717.582287928s|s29000167b|29000167|rds|local|vector|||2.712||
+plot_pp_check|stem|e263a527e254cd75|1d6a2441d2ec9340|22c5cc320f060aa6|1602978789||t20717.5829729831s|s32926612b|32926612|rds|local|vector|||24.411|Removed 171 rows containing non-finite outside the scale range (`stat_density()`).. Removed 6684 rows containing non-finite outside the scale range (`stat_density()`).. Removed 74 rows containing non-finite outside the scale range (`stat_density()`).. Removed 8140 rows containing non-finite outside the scale range (`stat_density()`).. Removed 200 rows containing non-finite outside the scale range (`stat_density()`).|
+plot_pred_global|stem|8cd81f5263f2e75e|0760c8c348868573|49ed0ce135228b38|-1061999205||t20717.5834743508s|s1474110b|1474110|rds|local|vector|||8.731||

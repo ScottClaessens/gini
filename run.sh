@@ -3,7 +3,7 @@
 #SBATCH --job-name=gini
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --time=10-00:00:00
+#SBATCH --time=00-01:00:00
 #SBATCH --mem=30G
 #SBATCH --account=arch039044
 

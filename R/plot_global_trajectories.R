@@ -314,7 +314,9 @@ plot_global_trajectories <- function(fit_draws_model,
   )
   
   # cleanup
-  rm(fit_draws_model, out, P, C, G, I, U)
+  rm(fit_draws_model, draws, out, P, C, G, I, U,
+     pA, pB, pC, pD, pE, ndraws, times1, times2,
+     times3, i1, i2, i3)
   
   # return
   p

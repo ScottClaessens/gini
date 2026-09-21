@@ -82,6 +82,9 @@ plot_model_rates <- function(fit_draws_model) {
     height = 5,
     width = 5
   )
+
+  # cleanup
+  rm(fit_draws_model, var_names, period_names)
   
   # return
   p

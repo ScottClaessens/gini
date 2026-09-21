@@ -83,10 +83,6 @@ plot_gini_change <- function(fit_draws_model) {
       ncol = 2,
       axis_titles = "collect_y"
     )
-
-  # cleanup
-  rm(fit_draws_model, alpha, betaP, betaC, betaI, betaU,
-     pA, pB, pC, pD)
   
   # save
   ggsave(
@@ -95,6 +91,9 @@ plot_gini_change <- function(fit_draws_model) {
     height = 6,
     width = 6
   )
+
+  # cleanup
+  rm(fit_draws_model, alpha, betaP,)
   
   # return
   out

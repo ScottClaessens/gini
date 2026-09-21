@@ -20,7 +20,7 @@ tar_option_set(
       ),
       memory_gigabytes_required = 200,
       cpus_per_task = 8,
-      time_minutes = 10 * 24 * 60,
+      time_minutes = 60,
       log_output = "crew_log_%A.out",
       log_error = "crew_log_%A.err"
     )

@@ -95,7 +95,8 @@ plot_predictive_check <- function(data, fit_draws_model) {
     plot_layout(guides = "collect")
   
   # cleanup
-  rm(data, fit_draws_model)
+  rm(data, fit_draws_model, y, yrep,
+     pA, pB, pC, pD, pE)
   
   # save
   ggsave(
