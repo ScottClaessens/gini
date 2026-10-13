@@ -28,7 +28,15 @@ load_data <- function(file_gini, file_hyde) {
     # drop sites with no information on dates or longitude/latitude
     drop_na(any_of(c("date", "longitude", "latitude"))) |>
     # filter to later than 10,000 BCE
-    filter(date >= -10000)
+    filter(date >= -10000) |>
+    # fix some subregions to ensure they are uniquely nested within regions
+    mutate(
+      subregion = case_when(
+        subregion == "Romania"     ~ paste(region, subregion),
+        subregion == "Switzerland" ~ paste(region, subregion),
+        TRUE ~ subregion
+      )
+    )
   
   # load HYDE data
   hyde <- read_csv(file_hyde, show_col_types = FALSE)

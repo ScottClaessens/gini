@@ -2,7 +2,7 @@ options(tidyverse.quiet = TRUE)
 library(targets)
 library(tarchetypes)
 library(tidyverse)
-tar_option_set(packages = c("tidyverse"))
+tar_option_set(packages = c("brms", "tidyverse"))
 tar_source()
 
 list(
