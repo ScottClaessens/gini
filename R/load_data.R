@@ -20,57 +20,31 @@ load_data <- function(file_gini, file_hyde) {
       date       = Date,
       gini       = Gini
     ) |>
-    # drop sites with no information on dates or longitude/latitude
-    drop_na(c(date, longitude, latitude)) |>
     # nudge lon-lat coordinate for Kodiak Island to match hyde data
     mutate(
       longitude = ifelse(subregion == "North Pacific", -153.279, longitude),
       latitude = ifelse(subregion == "North Pacific", 57.176, latitude)
     ) |>
-    # fix some subregions to ensure one subregion per lon-lat point
-    mutate(
-      subregion = paste(region, subregion),
-      subregion = ifelse(id == 230, "W Europe Switzerland", subregion),
-      subregion = ifelse(id == 664, "Great Britain Central Belt", subregion),
-      subregion = ifelse(id == 902, "Great Britain East", subregion),
-      subregion = ifelse(id == 916, "SE Europe Bulgaria", subregion)
-    )
+    # drop sites with no information on dates or longitude/latitude
+    drop_na(any_of(c("date", "longitude", "latitude"))) |>
+    # filter to later than 10,000 BCE
+    filter(date >= -10000)
   
   # load HYDE data
   hyde <- read_csv(file_hyde, show_col_types = FALSE)
   
-  # get unique lon-lat coordinates and subregions
-  coords <- 
-    dplyr::select(gini, longitude, latitude, subregion) |>
-    unique()
-  
-  # summarise hyde data by subregion
-  d <-
-    left_join(
-      hyde,
-      coords, 
-      by = c("longitude", "latitude")
+  # join datasets by lon/lat and closest hyde date prior to gini date
+  left_join(
+    x = gini, 
+    y = hyde,
+    by = join_by(longitude, latitude, closest(date >= date))
+  ) |>
+    # rename resulting date columns
+    rename(
+      date_gini = date.x,
+      date_hyde = date.y
     ) |>
-    # summarise by subregion
-    group_by(date, subregion) |>
-    summarise(
-      across(longitude:irrigated, function(x) mean(x, na.rm = TRUE)),
-      .groups = "drop"
-    ) |>
-    arrange(subregion, date)
-  
-  # add gini data and return
-  bind_rows(d, dplyr::select(gini, date, subregion, gini)) |>
-    fill(
-      c(longitude, latitude),
-      .by = "subregion",
-      .direction = "updown"
-    ) |>
-    # retain only records after 10,000 BC
-    filter(date >= -10000) |>
-    # remove Rapa Nui as there is no HYDE data
-    filter(subregion != "Polynesia Rapa Nui") |>
-    # arrange dataset
-    arrange(subregion, date)
+    # remove few cases with missing hyde data
+    drop_na(any_of(c("pop_size", "urban", "cropland", "irrigated")))
   
 }
