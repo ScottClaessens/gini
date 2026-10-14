@@ -1,7 +1,7 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 file_gini|stem|55a6666557c52dc2|f68edb0f308568cc|2c530c1562a7fbd1|1176102249|data/gini/SiteGiniLevel.csv|t20490.6654210819s|s574550b|574550|file|local|vector|||1.78||
-file_hyde|stem|22a26928e786a48b|9ef94c91729879a2|2c530c1562a7fbd1|1001141386|data/hyde/hyde.csv|t20662.6607739945s|s2908506b|2908506|file|local|vector|||0.931||
-fit|stem|33c09107535bf123|122b7dd8ec340fb3|091873eeb9785eb9|150100524||t20739.4899829657s|s44b|44|rds|local|vector|||0||
-data|stem|c8792a475bdcc848|e668cf0f8d2153b6|ae0b1ee1e717bf7d|33550471||t20739.614443949s|s33418b|33418|rds|local|vector|||0.143||
-fit_model|function|a8137994b3aa8df7
-load_data|function|d3d017fc904aa3e0
+file_hyde|stem|fa2e649970341684|9ef94c91729879a2|2c530c1562a7fbd1|1001141386|data/hyde/hyde.csv|t20740.7866857883s|s4994597b|4994597|file|local|vector|||1.455||
+fit|stem|11f1837b3f2c2b0b|122b7dd8ec340fb3|7f13bc1437fffdd4|150100524||t20740.633392289s||11155225|rds|local|vector|||0.05||ℹ In argument: `irrigated = irrigated > 0`. Caused by error: ! object 'irrigated' not found
+fit_model|function|136941ac33d5e465
+load_data|function|be121b7d20b06b78
+data|stem|84e47d1d68fda6e3|e668cf0f8d2153b6|e05848eb822c0aae|33550471||t20740.7932066233s|s52582b|52582|rds|local|vector|||0.145||

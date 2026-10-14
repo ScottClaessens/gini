@@ -13,6 +13,7 @@ load_data <- function(file_gini, file_hyde) {
     read_csv(show_col_types = FALSE) |>
     transmute(
       id         = `...1`,
+      bigregion  = Bigregion,
       region     = Region,
       subregion  = Subregion,
       latitude   = Latitude,
@@ -53,6 +54,6 @@ load_data <- function(file_gini, file_hyde) {
       date_hyde = date.y
     ) |>
     # remove few cases with missing hyde data
-    drop_na(any_of(c("pop_size", "urban", "cropland", "irrigated")))
+    drop_na()
   
 }

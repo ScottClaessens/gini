@@ -3,23 +3,24 @@
 # Author: Scott Claessens
 #
 # This code loops over time slices in the HYDE dataset. For each time slice, the
-# code downloads raster data from HYDE and links it to longitude-latitude 
-# coordinates from the Gini dataset. The resulting data file is written to 
-# hyde.csv in the data/hyde/ directory.
+# code downloads raster data from HYDE zip files and links it to longitude and 
+# latitude coordinates from the Gini dataset. The resulting data file is written
+# to hyde.csv in the data/hyde/ directory.
 #
-# Estimated run time on a MacBook Pro is around one hour.
+# Estimated run time on a MacBook Pro is around 30 minutes.
 #
 
 library(terra)      # v1.9-27
 library(tidyverse)  # v2.0.0
 
-# get time slices in hyde dataset up to 1980 (maximum date in gini dataset)
+# get time slices in hyde dataset up to 1980
+# we remove some dates that are not in the gini dataset
 time_slices <- 
   c(
     seq(from = -10000, to = 0,    by = 1000),
     seq(from = 100,    to = 1700, by = 100),
-    seq(from = 1710,   to = 1950, by = 10),
-    seq(from = 1951,   to = 1980, by = 1)
+    seq(from = 1710,   to = 1930, by = 10),
+    c(1960, 1970, 1972, 1974, 1980)
   )
 
 # get names of time slices
@@ -53,37 +54,50 @@ points <- vect(
 # initialise hyde dataset
 out <- tibble()
 
+# get variables
+pop_vars <- c("popc", "rurc", "urbc", "uopp")
+lu_vars <- c("cropland", "grazing", "pasture", "rangeland", "conv_rangeland",
+             "ir_norice", "rf_norice", "ir_rice", "rf_rice", "tot_irri",
+             "tot_rainfed", "tot_rice")
+
 # loop over time slices
 for (i in 1:length(time_slices)) {
   
   # print progress message
-  message("Downloading HYDE data for ", names(time_slices)[i])
+  message("Extracting HYDE data for ", names(time_slices)[i])
   
   # initialise time slice data
   d <- bind_cols(date = time_slices[i], unique_lon_lat)
   
   # loop over different variables to extract
-  for (variable in c("popc", "uopp", "cropland", "tot_irri")) {
+  for (variable in c(pop_vars, lu_vars)) {
     
-    # get url of zip file for data
-    url <- paste0(
-      "https://geo.public.data.uu.nl/vault-hyde/",
-      "hyde35_c9_apr2025%5B1749214444%5D/original/",
-      "gbc2025_7apr_base/zip/",
+    # identify zip file
+    zip_file <- paste0(
+      "data/hyde/raw/",
       names(time_slices)[i],
       "_",
-      ifelse(variable %in% c("cropland", "tot_irri"), "lu", "pop"),
+      ifelse(variable %in% lu_vars, "lu", "pop"),
       ".zip"
     )
     
-    # download zip file into data/hyde/ directory
-    zip_file <- tempfile()
-    download.file(url, zip_file, quiet = TRUE)
+    # if zip file does not exist, print error message
+    if (!file.exists(zip_file)) {
+      stop(
+        paste0(
+          "The HYDE data file '", zip_file, "' does not exist.\n",
+          "Please download it from the following URL:\n",
+          "https://geo.public.data.uu.nl/vault-hyde/",
+          "hyde35_c9_apr2025%5B1749214444%5D/original/gbc2025_7apr_base/zip/"
+        ),
+        call. = FALSE
+      )
+    }
     
     # identify raster file
     raster_file <- paste0(
       variable,
-      ifelse(variable %in% c("cropland", "tot_irri"), "", "_"),
+      ifelse(variable %in% lu_vars, "", "_"),
       names(time_slices)[i],
       ".asc"
     )
@@ -92,11 +106,11 @@ for (i in 1:length(time_slices)) {
     unzip(
       zipfile = zip_file,
       files = raster_file,
-      exdir = "data/hyde"
+      exdir = "data/hyde/raw"
     )
     
     # load raster file
-    r <- rast(paste0("data/hyde/", raster_file))
+    r <- rast(paste0("data/hyde/raw/", raster_file))
     
     # project raster to a CRS with metre units
     r_proj <- project(r, "EPSG:6933")  # equal-area global projection
@@ -107,16 +121,16 @@ for (i in 1:length(time_slices)) {
     # create 50 km buffers
     buffers <- buffer(points_proj, width = 50000)
     
-    # extract mean value within each buffer
+    # extract total value within each buffer
     d[[variable]] <- extract(
       r_proj,
       buffers,
-      fun = mean,
+      fun = sum,
       na.rm = TRUE
     )[, 2]
     
     # clean up
-    file.remove(paste0("data/hyde/", raster_file))
+    file.remove(paste0("data/hyde/raw/", raster_file))
     
   }
   
@@ -128,12 +142,24 @@ for (i in 1:length(time_slices)) {
 # write to csv
 out |>
   transmute(
-    date      = date,
-    longitude = Longitude,
-    latitude  = Latitude,
-    pop_size  = round(popc, 2),
-    urban     = round(uopp, 2),
-    cropland  = round(cropland, 2),
-    irrigated = round(tot_irri, 2)
+    date           = date,
+    longitude      = Longitude,
+    latitude       = Latitude,
+    popc           = round(popc, 2),
+    rurc           = round(rurc, 2),
+    urbc           = round(urbc, 2),
+    uopp           = round(uopp, 2),
+    cropland       = round(cropland, 2),
+    grazing        = round(grazing, 2),
+    pasture        = round(pasture, 2),
+    rangeland      = round(rangeland, 2),
+    conv_rangeland = round(conv_rangeland, 2),
+    ir_norice      = round(ir_norice, 2),
+    rf_norice      = round(rf_norice, 2),
+    ir_rice        = round(ir_rice, 2),
+    rf_rice        = round(rf_rice, 2),
+    tot_irri       = round(tot_irri, 2),
+    tot_rainfed    = round(tot_rainfed, 2),
+    tot_rice       = round(tot_rice, 2)
   ) |>
   write_csv("data/hyde/hyde.csv")
